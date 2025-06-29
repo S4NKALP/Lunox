@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Last Launcher
+  ~ Copyright (C) 2019 Shubham Tyagi
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/menu_color"
+        android:title="@string/color_for_this_entry" />
+
+    <!-- <item
+         android:id="@+id/menu_size"
+         android:title="@string/size_for_this_entry" />-->
+
+    <item
+        android:id="@+id/menu_rename"
+        android:title="@string/rename" />
+
+    <item
+        android:id="@+id/menu_freeze_size"
+        android:title="@string/freeze_size" />
+    <item
+        android:id="@+id/menu_app_info"
+        android:title="@string/app_info" />
+    <item
+        android:id="@+id/menu_reset_color"
+        android:title="@string/reset_color" />
+    <item
+        android:id="@+id/menu_hide"
+        android:title="@string/hide" />
+    <item
+        android:id="@+id/menu_reset_to_default"
+        android:title="@string/reset_to_default" />
+    <item
+        android:id="@+id/menu_uninstall"
+        android:title="@string/uninstall" />
+
+
+</menu>
