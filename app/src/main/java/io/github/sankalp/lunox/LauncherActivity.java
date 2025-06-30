@@ -79,12 +79,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import io.github.sankalp.lunox.dialogs.AppSettingsPopup;
 import io.github.sankalp.lunox.dialogs.ColorSizeDialog;
 import io.github.sankalp.lunox.dialogs.FrozenAppsDialogs;
 import io.github.sankalp.lunox.dialogs.GlobalColorSizeDialog;
 import io.github.sankalp.lunox.dialogs.GlobalSettingsDialog;
 import io.github.sankalp.lunox.dialogs.HiddenAppsDialogs;
 import io.github.sankalp.lunox.dialogs.PaddingDialog;
+import io.github.sankalp.lunox.dialogs.PermissionDialog;
 import io.github.sankalp.lunox.dialogs.RenameInputDialogs;
 import io.github.sankalp.lunox.model.Apps;
 import io.github.sankalp.lunox.model.Shortcut;
@@ -564,13 +566,13 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             // If we have very few apps, try reloading in case permissions were granted
             loadApps();
         }
-        
+
         // Check if search box is visible and hide it if needed
         if (mSearchBox.getVisibility() == View.VISIBLE) {
             mSearchBox.setVisibility(View.GONE);
             mHomeLayout.setPadding(DbUtils.getPaddingLeft(), DbUtils.getPaddingTop(), DbUtils.getPaddingRight(), DbUtils.getPaddingBottom());
         }
-        
+
         // Reset search state
         searching = false;
     }
@@ -605,88 +607,13 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     private void showPopup(String activityName, AppTextView view) {
-
-        Context context;
-        // set theme
-        // if theme wallpaper ie transparent then we have to show other theme
-        if (DbUtils.getTheme() == R.style.Wallpaper)
-            context = new ContextThemeWrapper(this, R.style.AppTheme);
-        else
-            context = new ContextThemeWrapper(this, DbUtils.getTheme());
-
-        PopupMenu popupMenu = new PopupMenu(context, view);
-        popupMenu.getMenuInflater().inflate(R.menu.menu, popupMenu.getMenu());
-
-
-        int color = Color.parseColor("#E53935");
-
-        SpannableString s = new SpannableString(getString(R.string.hide));
-
-        s.setSpan(new ForegroundColorSpan(color), 0, s.length(), 0);
-        popupMenu.getMenu().findItem(R.id.menu_hide).setTitle(s);
-
-        s = new SpannableString(getString(R.string.uninstall));
-        s.setSpan(new ForegroundColorSpan(color), 0, s.length(), 0);
-        popupMenu.getMenu().findItem(R.id.menu_uninstall).setTitle(s);
-
-        s = new SpannableString(getString(R.string.reset_to_default));
-        s.setSpan(new ForegroundColorSpan(color), 0, s.length(), 0);
-        popupMenu.getMenu().findItem(R.id.menu_reset_to_default).setTitle(s);
-
-
-        // set proper item based on Db value
-        if (DbUtils.isAppFrozen(activityName)) {
-            popupMenu.getMenu().findItem(R.id.menu_freeze_size).setTitle(R.string.unfreeze_size);
-        }
-
-        //disable some item for shortcut
-        // and change the uninstall to remove
-        if (view.isShortcut()) {
-
-            SpannableString s1 = new SpannableString(getString(R.string.remove));
-            s1.setSpan(new ForegroundColorSpan(Color.parseColor("#E53935")), 0, s1.length(), 0);
-            popupMenu.getMenu().findItem(R.id.menu_uninstall).setTitle(s1);
-
-            popupMenu.getMenu().findItem(R.id.menu_hide).setVisible(false);
-            //renaming is also disabled;
-            // consider it later
-            popupMenu.getMenu().findItem(R.id.menu_rename).setVisible(false);
-            popupMenu.getMenu().findItem(R.id.menu_app_info).setVisible(false);
-        }
-
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            int id = menuItem.getItemId();
-            if (id == R.id.menu_color) {
-                changeColorSize(activityName, view);
-            } else if (id == R.id.menu_rename) {
-                renameApp(activityName, view.getText().toString());
-            } else if (id == R.id.menu_freeze_size) {
-                freezeAppSize(activityName);
-            } else if (id == R.id.menu_hide) {
-                hideApp(activityName);
-            } else if (id == R.id.menu_uninstall) {
-                if (view.isShortcut()) {
-                    removeShortcut(view);
-                } else {
-                    uninstallApp(activityName);
-                }
-            } else if (id == R.id.menu_app_info) {
-                showAppInfo(activityName);
-            } else if (id == R.id.menu_reset_to_default) {
-                resetApp(activityName);
-            } else if (id == R.id.menu_reset_color) {
-                resetAppColor(activityName);
-            } else {
-                return true;
-            }
-            return true;
-        });
-        // not forget to show popup
-        popupMenu.show();
+        // show app settings popup instead of popup menu
+        AppSettingsPopup popup = new AppSettingsPopup(this, activityName, view, this);
+        popup.showAsDropDown(view);
     }
 
     //reset the app color to default color;
-    private void resetAppColor(String activityName) {
+    public void resetAppColor(String activityName) {
         DbUtils.removeColor(activityName);
         boolean sortNeeded = (DbUtils.getSortsTypes() == SORT_BY_COLOR);
         addAppAfterReset(activityName, sortNeeded);
@@ -723,7 +650,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     // as method name suggest
-    private void freezeAppSize(String activityName) {
+    public void freezeAppSize(String activityName) {
         boolean b = DbUtils.isAppFrozen(activityName);
         for (Apps apps : mAppsList) {
             if (activityName.equalsIgnoreCase(apps.getActivityName())) {
@@ -734,7 +661,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     // as method name suggest
-    private void hideApp(String activityName) {
+    public void hideApp(String activityName) {
         for (Apps apps : mAppsList) {
             if (activityName.equalsIgnoreCase(apps.getActivityName())) {
                 apps.setAppHidden(true);
@@ -744,7 +671,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     // show the app rename Dialog
-    private void renameApp(String activityName, String appName) {
+    public void renameApp(String activityName, String appName) {
         dialogs = new RenameInputDialogs(this, activityName, appName, this);
         Window window = dialogs.getWindow();
         if (window != null) {
@@ -771,20 +698,20 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     // reset the app
-    private void resetApp(String activityName) {
+    public void resetApp(String activityName) {
         DbUtils.removeAppName(activityName);
         DbUtils.removeColor(activityName);
         DbUtils.removeSize(activityName);
         addAppAfterReset(activityName, true);
     }
 
-    private void showAppInfo(String activityName) {
+    public void showAppInfo(String activityName) {
         Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:" + activityName.split("/")[0]));
         startActivity(intent);
     }
 
-    private void uninstallApp(String activityName) {
+    public void uninstallApp(String activityName) {
         Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
         intent.setData(Uri.parse("package:" + activityName.split("/")[0]));
         intent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
@@ -792,7 +719,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     //show dialog(i.e a color seek bar) for change color
-    private void changeColorSize(String activityName, TextView view) {
+    public void changeColorSize(String activityName, TextView view) {
         int color = DbUtils.getAppColor(activityName);
         if (color == DbUtils.NULL_TEXT_COLOR) {
             color = view.getCurrentTextColor();
@@ -1214,7 +1141,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
      *
      * @param view shortcut view to be removed...
      */
-    private void removeShortcut(AppTextView view) {
+    public void removeShortcut(AppTextView view) {
         // view.setVisibility(View.GONE);
         shortcutUtils.removeShortcut(new Shortcut(view.getText().toString(), view.getUri()));
 
@@ -1224,13 +1151,13 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
     @Override
     public void onSwipe(Gestures.Direction direction) {
-        if (direction == Gestures.Direction.SWIPE_RIGHT) {
+        if (direction == Gestures.Direction.SWIPE_UP) {
             searching = true;
             mSearchBox.setText("");
             mSearchBox.setVisibility(View.VISIBLE);
             mSearchBox.requestFocus();
             imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
-        } else if (direction == Gestures.Direction.SWIPE_LEFT) {
+        } else if (direction == Gestures.Direction.SWIPE_DOWN) {
             if (searching) {
                 mSearchBox.setVisibility(View.GONE);
                 imm.hideSoftInputFromWindow(mSearchBox.getWindowToken(), 0);
@@ -1243,6 +1170,13 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     public void onDoubleTap() {
         // Always lock the device on double tap
         DeviceAdminManager.lockDevice(this);
+    }
+
+    @Override
+    public void onLongPress() {
+        // Show launcher settings on long press in free space
+        dialogs = new GlobalSettingsDialog(this, this);
+        dialogs.show();
     }
 
     static class SearchTask extends AsyncTask<CharSequence, Void, ArrayList<Apps>> {
@@ -1341,100 +1275,16 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             return;
         }
 
-        // Create a comprehensive permission request dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Welcome to Lunox! 🚀");
-        builder.setMessage("To provide the best experience, Lunox needs a few permissions:\n\n" +
-                "📱 **Usage Access**: To show all your installed apps\n" +
-                "🔒 **Device Admin**: To manage app freezing and advanced features\n\n" +
-                "These permissions help Lunox work properly and show all your apps.");
-        
-        builder.setIcon(android.R.drawable.ic_dialog_info);
-        builder.setCancelable(false);
-        
-        builder.setPositiveButton("Grant Permissions", (dialog, which) -> {
-            requestPermissions();
-        });
-        
-        builder.setNegativeButton("Skip for Now", (dialog, which) -> {
-            DbUtils.setPermissionDialogShown(true);
-        });
-        
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        // Create the new permission dialog with proper theming
+        Context ctx;
+        if (DbUtils.getTheme() == R.style.Wallpaper)
+            ctx = new ContextThemeWrapper(this, R.style.AppTheme);
+        else
+            ctx = new ContextThemeWrapper(this, DbUtils.getTheme());
+
+        PermissionDialog permissionDialog = new PermissionDialog(ctx, this);
+        permissionDialog.show();
     }
 
-    /**
-     * Request all necessary permissions
-     */
-    private void requestPermissions() {
-        // Check and request Usage Access permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            AppOpsManager appOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
-            int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    android.os.Process.myUid(), getPackageName());
-            if (mode != AppOpsManager.MODE_ALLOWED) {
-                showUsageAccessDialog();
-            }
-        }
-        
-        // Check and request Device Admin permission
-        if (!DeviceAdminManager.isDeviceAdminActive(this)) {
-            showDeviceAdminDialog();
-        }
-        
-        DbUtils.setPermissionDialogShown(true);
-    }
 
-    /**
-     * Show dialog to guide user to enable usage access
-     */
-    private void showUsageAccessDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("📱 Usage Access Required");
-        builder.setMessage("To show all your installed apps, please enable 'Usage Access' for Lunox:\n\n" +
-                "1. Tap 'Open Settings'\n" +
-                "2. Find 'Lunox Dev' in the list\n" +
-                "3. Toggle 'Allow usage access' ON\n" +
-                "4. Return to Lunox\n\n" +
-                "This helps Lunox detect all your apps properly.");
-        
-        builder.setIcon(android.R.drawable.ic_menu_manage);
-        builder.setCancelable(false);
-        
-        builder.setPositiveButton("Open Settings", (dialog, which) -> {
-            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-            startActivity(intent);
-        });
-        
-        builder.setNegativeButton("Later", null);
-        
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    /**
-     * Show dialog to guide user to enable device admin
-     */
-    private void showDeviceAdminDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("🔒 Device Admin Required");
-        builder.setMessage("Device Admin permission enables advanced features like:\n\n" +
-                "• App freezing functionality\n" +
-                "• Enhanced app management\n" +
-                "• Better system integration\n\n" +
-                "This permission is safe and only used for launcher features.");
-        
-        builder.setIcon(android.R.drawable.ic_lock_lock);
-        builder.setCancelable(false);
-        
-        builder.setPositiveButton("Enable Device Admin", (dialog, which) -> {
-            DeviceAdminManager.requestDeviceAdminPermission(this);
-        });
-        
-        builder.setNegativeButton("Skip", null);
-        
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 }

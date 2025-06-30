@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Last Launcher
+  ~ Copyright (C) 2019 Shubham Tyagi
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
+        <TextView
+            android:id="@+id/app_settings_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/color_for_this_entry"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:background="#DEDEDE"
+            android:foregroundGravity="center_vertical|center_horizontal" />
+
+        <TextView
+            android:id="@+id/app_settings_rename"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/rename"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:background="#DEDEDE"
+            android:foregroundGravity="center_vertical|center_horizontal" />
+
+        <TextView
+            android:id="@+id/app_settings_freeze_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/freeze_size"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:background="#DEDEDE"
+            android:foregroundGravity="center_vertical|center_horizontal" />
+
+
+        <TextView
+            android:id="@+id/app_settings_app_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/app_info"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:background="#DEDEDE"
+            android:foregroundGravity="center_vertical|center_horizontal" />
+
+
+        <TextView
+            android:id="@+id/app_settings_reset_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/reset_color"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:background="#DEDEDE"
+            android:foregroundGravity="center_vertical|center_horizontal" />
+
+        <TextView
+            android:id="@+id/app_settings_hide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+
+            android:text="@string/hide"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:background="#DEDEDE"
+            android:foregroundGravity="center_vertical|center_horizontal" />
+
+        <TextView
+            android:id="@+id/app_settings_reset_to_default"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+
+            android:text="@string/reset_to_default"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center|center_horizontal|center_vertical"
+            android:background="#DEDEDE"
+            android:foregroundGravity="center_vertical|center_horizontal" />
+
+        <TextView
+            android:id="@+id/app_settings_uninstall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="5dp"
+
+            android:paddingBottom="5dp"
+            android:text="@string/uninstall"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+</ScrollView>

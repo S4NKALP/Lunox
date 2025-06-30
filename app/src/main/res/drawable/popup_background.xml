@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    
+    <!-- Black background like the dialog -->
+    <solid android:color="@android:color/black" />
+    
+    <!-- Border/stroke around the popup -->
+    <stroke
+        android:width="2dp"
+        android:color="#DEDEDE" />
+    
+    <!-- Rounded corners for better appearance -->
+    <corners android:radius="4dp" />
+    
+</shape>
