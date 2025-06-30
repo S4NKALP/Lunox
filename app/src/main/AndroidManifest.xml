@@ -7,7 +7,7 @@
 
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.BIND_DEVICE_ADMIN" />
+
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
 
     <!-- Permissions for app detection -->
@@ -40,19 +40,7 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".utils.lunoxDeviceAdminReceiver"
-            android:description="@string/device_admin_description"
-            android:label="@string/device_admin_label"
-            android:permission="android.permission.BIND_DEVICE_ADMIN"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/device_admin" />
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-        </receiver>
+
 
     </application>
 

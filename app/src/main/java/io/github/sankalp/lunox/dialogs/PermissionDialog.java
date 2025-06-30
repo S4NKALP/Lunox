@@ -33,13 +33,12 @@ import android.widget.Toast;
 import io.github.sankalp.lunox.LauncherActivity;
 import io.github.sankalp.lunox.R;
 import io.github.sankalp.lunox.utils.DbUtils;
-import io.github.sankalp.lunox.utils.DeviceAdminManager;
+
 
 public class PermissionDialog extends Dialog implements View.OnClickListener {
 
     private final LauncherActivity context;
     private TextView usageAccessButton;
-    private TextView deviceAdminButton;
     private TextView continueButton;
 
     public PermissionDialog(Context context, LauncherActivity launcherActivity) {
@@ -56,12 +55,10 @@ public class PermissionDialog extends Dialog implements View.OnClickListener {
 
         // Initialize views
         usageAccessButton = findViewById(R.id.permission_usage_access);
-        deviceAdminButton = findViewById(R.id.permission_device_admin);
         continueButton = findViewById(R.id.permission_continue);
 
         // Set click listeners
         usageAccessButton.setOnClickListener(this);
-        deviceAdminButton.setOnClickListener(this);
         continueButton.setOnClickListener(this);
 
         // Update button states
@@ -74,8 +71,6 @@ public class PermissionDialog extends Dialog implements View.OnClickListener {
 
         if (id == R.id.permission_usage_access) {
             openUsageAccessSettings();
-        } else if (id == R.id.permission_device_admin) {
-            enableDeviceAdmin();
         } else if (id == R.id.permission_continue) {
             continueToLauncher();
         }
@@ -94,28 +89,20 @@ public class PermissionDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    private void enableDeviceAdmin() {
-        try {
-            DeviceAdminManager.requestDeviceAdminPermission(context);
-            Toast.makeText(context, "Please enable Device Admin for Lunox", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(context, "Unable to open Device Admin settings", Toast.LENGTH_SHORT).show();
-        }
-    }
+
 
     private void continueToLauncher() {
         // Mark permission dialog as shown
         DbUtils.setPermissionDialogShown(true);
 
-        // Check if at least one permission is granted
+        // Check if usage access permission is granted
         boolean hasUsageAccess = checkUsageAccessPermission();
-        boolean hasDeviceAdmin = DeviceAdminManager.isDeviceAdminActive(context);
 
-        if (hasUsageAccess || hasDeviceAdmin) {
+        if (hasUsageAccess) {
             dismiss();
             context.loadApps(); // Reload apps after permissions are granted
         } else {
-            Toast.makeText(context, "Please grant at least one permission to continue", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Please grant Usage Access permission to continue", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -133,21 +120,11 @@ public class PermissionDialog extends Dialog implements View.OnClickListener {
         // Update Usage Access button
         boolean hasUsageAccess = checkUsageAccessPermission();
         if (hasUsageAccess) {
-            usageAccessButton.setText("Usage Access");
+            usageAccessButton.setText("Usage Access ✓");
             usageAccessButton.setAlpha(0.7f);
         } else {
             usageAccessButton.setText("Enable Usage Access");
             usageAccessButton.setAlpha(1.0f);
-        }
-
-        // Update Device Admin button
-        boolean hasDeviceAdmin = DeviceAdminManager.isDeviceAdminActive(context);
-        if (hasDeviceAdmin) {
-            deviceAdminButton.setText("Device Admin");
-            deviceAdminButton.setAlpha(0.7f);
-        } else {
-            deviceAdminButton.setText("Enable Device Admin");
-            deviceAdminButton.setAlpha(1.0f);
         }
     }
 

@@ -61,19 +61,7 @@
         android:clickable="true"
         android:focusable="true" />
 
-    <!-- Device Admin Permission -->
-    <TextView
-        android:id="@+id/permission_device_admin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="15dp"
-        android:layout_margin="5dp"
-        android:text="Enable Device Admin"
-        android:textSize="20sp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true" />
+
 
     <!-- Continue Button -->
     <TextView

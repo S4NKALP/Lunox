@@ -93,7 +93,7 @@ import io.github.sankalp.lunox.model.Apps;
 import io.github.sankalp.lunox.model.Shortcut;
 import io.github.sankalp.lunox.utils.CrashUtils;
 import io.github.sankalp.lunox.utils.DbUtils;
-import io.github.sankalp.lunox.utils.DeviceAdminManager;
+
 import io.github.sankalp.lunox.utils.Gestures;
 import io.github.sankalp.lunox.utils.NotificationPanelManager;
 import io.github.sankalp.lunox.utils.ShortcutUtils;
@@ -1211,11 +1211,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    @Override
-    public void onDoubleTap() {
-        // Always lock the device on double tap
-        DeviceAdminManager.lockDevice(this);
-    }
+
 
 
 

@@ -73,11 +73,7 @@ public class Gestures extends GestureDetector.SimpleOnGestureListener {
         return consumed;
     }
 
-    @Override
-    public boolean onDoubleTap(MotionEvent arg) {
-        this.listener.onDoubleTap();
-        return true;
-    }
+
 
 
     public enum Direction {
@@ -86,8 +82,6 @@ public class Gestures extends GestureDetector.SimpleOnGestureListener {
 
     public interface OnSwipeListener {
         void onSwipe(Direction direction);
-
-        void onDoubleTap();
     }
 
 }

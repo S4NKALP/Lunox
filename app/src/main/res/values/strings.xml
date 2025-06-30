@@ -91,14 +91,11 @@
     <string name="recently_first">Recently first</string>
     <string name="restart_launcher">Restart Launcher</string>
 
-    <string name="device_admin_label">Lunox Device Admin</string>
-    <string name="device_admin_description">Required for double-tap to lock screen functionality</string>
-    <string name="device_admin_enable">Enable Device Admin</string>
-    <string name="device_admin_disabled">Device Admin is required for lock screen functionality</string>
+
 
     <!-- Permission Dialog Strings -->
     <string name="permission_dialog_title">Welcome to Lunox! 🚀</string>
-    <string name="permission_dialog_message">To provide the best launcher experience, Lunox needs these permissions:\n\n<b>Usage Access</b> - Display all your apps\n<b>Device Admin</b> - Enable advanced features\n\nTap each permission below to enable it.</string>
+    <string name="permission_dialog_message">To provide the best launcher experience, Lunox needs this permission:\n\n<b>Usage Access</b> - Display all your apps\n\nTap the permission below to enable it.</string>
 
 
     <!-- Frozen apps dialog title -->
