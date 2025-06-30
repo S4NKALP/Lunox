@@ -61,6 +61,7 @@ public class DbUtils {
     private static final String GLOBAL_SIZE_ADDITION_EXTRA = "global_size_addition_extra";
     private static final String APPS_COLORS_DEFAULT = "apps_color_default";
     private static final String APPS_SORTS_TYPE = "apps_sorts_types";
+    private static final String PERMISSION_DIALOG_SHOWN = "permission_dialog_shown";
 
 
     public static void init(Context context) {
@@ -166,55 +167,44 @@ public class DbUtils {
 
     public static int getTheme() {
         int theme = SpUtils.getInstance().getInt(LAUNCHER_THEME, 2);
-        switch (theme) {
-            case 1:
-                return R.style.Wallpaper;
-            case 2:
-                return R.style.AppTheme;
-            case 3:
-                return R.style.White;
-            case 4:
-                return R.style.WhiteOnGrey;
-            case 5:
-                return R.style.Black;
-            case 6:
-                return R.style.BlackOnGrey;
-            case 7:
-                return R.style.Hacker_green;
-            case 8:
-                return R.style.Hacker_red;
+        if (theme == 1) {
+            return R.style.Wallpaper;
+        } else if (theme == 2) {
+            return R.style.AppTheme;
+        } else if (theme == 3) {
+            return R.style.White;
+        } else if (theme == 4) {
+            return R.style.WhiteOnGrey;
+        } else if (theme == 5) {
+            return R.style.Black;
+        } else if (theme == 6) {
+            return R.style.BlackOnGrey;
+        } else if (theme == 7) {
+            return R.style.Hacker_green;
+        } else if (theme == 8) {
+            return R.style.Hacker_red;
         }
-
         return R.style.AppTheme;
     }
 
     public static void setTheme(int id) {
         int theme = 0;
-        switch (id) {
-            case R.style.Wallpaper:
-                theme = 1;
-                break;
-            case R.style.AppTheme:
-                theme = 2;
-                break;
-            case R.style.White:
-                theme = 3;
-                break;
-            case R.style.WhiteOnGrey:
-                theme = 4;
-                break;
-            case R.style.Black:
-                theme = 5;
-                break;
-            case R.style.BlackOnGrey:
-                theme = 6;
-                break;
-            case R.style.Hacker_green:
-                theme = 7;
-                break;
-            case R.style.Hacker_red:
-                theme = 8;
-                break;
+        if (id == R.style.Wallpaper) {
+            theme = 1;
+        } else if (id == R.style.AppTheme) {
+            theme = 2;
+        } else if (id == R.style.White) {
+            theme = 3;
+        } else if (id == R.style.WhiteOnGrey) {
+            theme = 4;
+        } else if (id == R.style.Black) {
+            theme = 5;
+        } else if (id == R.style.BlackOnGrey) {
+            theme = 6;
+        } else if (id == R.style.Hacker_green) {
+            theme = 7;
+        } else if (id == R.style.Hacker_red) {
+            theme = 8;
         }
         SpUtils.getInstance().putInt(LAUNCHER_THEME, theme);
     }
@@ -386,6 +376,20 @@ public class DbUtils {
 
     public static void setAppsSortsType(int type) {
         SpUtils.getInstance().putInt(APPS_SORTS_TYPE, type);
+    }
+
+    /**
+     * Check if permission dialog has been shown
+     */
+    public static boolean isPermissionDialogShown() {
+        return SpUtils.getInstance().getBoolean(PERMISSION_DIALOG_SHOWN, false);
+    }
+
+    /**
+     * Set permission dialog as shown
+     */
+    public static void setPermissionDialogShown(boolean shown) {
+        SpUtils.getInstance().putBoolean(PERMISSION_DIALOG_SHOWN, shown);
     }
 
     //  a simple ciphered counter: "opening counter" is a private thing

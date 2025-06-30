@@ -91,9 +91,15 @@
     <string name="recently_first">Recently first</string>
     <string name="restart_launcher">Restart Launcher</string>
     
-    <!-- Device Admin strings -->
-    <string name="device_admin_label">Last Launcher Device Admin</string>
+    <string name="device_admin_label">Lunox Device Admin</string>
     <string name="device_admin_description">Required for double-tap to lock screen functionality</string>
     <string name="device_admin_enable">Enable Device Admin</string>
     <string name="device_admin_disabled">Device Admin is required for lock screen functionality</string>
+
+    <!-- Frozen apps dialog title -->
+    <string name="freezed_apps">Freezed Apps</string>
+    <!-- Color source from ColorSniffer app -->
+    <string name="from_colorsniffer_app">From ColorSniffer App</string>
+    <!-- Size setting for individual app entry -->
+    <string name="size_for_this_entry">Size for this entry</string>
 </resources>

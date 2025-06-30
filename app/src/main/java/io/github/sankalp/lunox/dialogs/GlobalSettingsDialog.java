@@ -114,63 +114,43 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.settings_fonts:
-                fontSelection(view);
-                break;
-            case R.id.settings_themes:
-                showThemeDialog();
-                break;
-            case R.id.settings_color_sniffer: {
-                if (BuildConfig.enableColorSniffer)
-                    showColorSnifferDialog();
-                else randomColor();
-            }
-            break;
-
-            case R.id.settings_sort_app_by: {
-                sortApps(view);
-                break;
-            }
-            case R.id.settings_color_size: {
-                showColorAndSizeDialog();
-            }
-            break;
-            case R.id.settings_freeze_size:
-                freezeAppsSize();
-                break;
-            case R.id.settings_hidden_apps:
-                hiddenApps();
-                break;
-            case R.id.settings_frozen_apps:
-                frozenApps();
-                break;
-            case R.id.settings_backup:
-                backup();
-                break;
-            case R.id.settings_restore:
-                restore();
-                break;
-            case R.id.settings_reset_to_defaults:
-                defaultSettings();
-                break;
-            case R.id.settings_alignment:
-                setFlowLayoutAlignment(view);
-                break;
-            case R.id.settings_padding:
-                launcherActivity.setPadding();
-                cancel();
-                break;
-            case R.id.settings_restart_launcher:
-                launcherActivity.recreate();
-                break;
+        int id = view.getId();
+        if (id == R.id.settings_fonts) {
+            fontSelection(view);
+        } else if (id == R.id.settings_themes) {
+            showThemeDialog();
+        } else if (id == R.id.settings_color_sniffer) {
+            if (BuildConfig.enableColorSniffer)
+                showColorSnifferDialog();
+            else randomColor();
+        } else if (id == R.id.settings_sort_app_by) {
+            sortApps(view);
+        } else if (id == R.id.settings_color_size) {
+            showColorAndSizeDialog();
+        } else if (id == R.id.settings_freeze_size) {
+            freezeAppsSize();
+        } else if (id == R.id.settings_hidden_apps) {
+            hiddenApps();
+        } else if (id == R.id.settings_frozen_apps) {
+            frozenApps();
+        } else if (id == R.id.settings_backup) {
+            backup();
+        } else if (id == R.id.settings_restore) {
+            restore();
+        } else if (id == R.id.settings_reset_to_defaults) {
+            defaultSettings();
+        } else if (id == R.id.settings_alignment) {
+            setFlowLayoutAlignment(view);
+        } else if (id == R.id.settings_padding) {
+            launcherActivity.setPadding();
+            cancel();
+        } else if (id == R.id.settings_restart_launcher) {
+            launcherActivity.recreate();
         }
     }
 
     private void sortApps(View view) {
         Context context;
-        // set theme
-        // if theme wallpaper ie transparent then we have to show other theme
         if (DbUtils.getTheme() == R.style.Wallpaper)
             context = new ContextThemeWrapper(getContext(), R.style.AppTheme);
         else
@@ -180,29 +160,19 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         popupMenu.getMenuInflater().inflate(R.menu.sort_apps_popups, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            cancel();
-            switch (menuItem.getItemId()) {
-                case R.id.menu_sort_by_name:
-                    launcherActivity.sortApps(Constants.SORT_BY_NAME);
-                    break;
-                case R.id.menu_sort_by_opening_counts:
-                    launcherActivity.sortApps(Constants.SORT_BY_OPENING_COUNTS);
-                    break;
-                case R.id.menu_sort_by_color:
-                    launcherActivity.sortApps(Constants.SORT_BY_COLOR);
-                    break;
-               /* case R.id.menu_sort_by_customs:
-                    launcherActivity.sortApps(LauncherActivity.SORT_BY_CUSTOM);
-                    break;*/
-                case R.id.menu_sort_by_size:
-                    launcherActivity.sortApps(Constants.SORT_BY_SIZE);
-                    break;
-                case R.id.menu_sort_by_update_time:
-                    launcherActivity.sortApps(Constants.SORT_BY_UPDATE_TIME);
-                    break;
-                case R.id.menu_sort_by_recent_use:
-                    launcherActivity.sortApps(Constants.SORT_BY_RECENT_OPEN);
-                    break;
+            int id = menuItem.getItemId();
+            if (id == R.id.menu_sort_by_name) {
+                launcherActivity.sortApps(Constants.SORT_BY_NAME);
+            } else if (id == R.id.menu_sort_by_opening_counts) {
+                launcherActivity.sortApps(Constants.SORT_BY_OPENING_COUNTS);
+            } else if (id == R.id.menu_sort_by_color) {
+                launcherActivity.sortApps(Constants.SORT_BY_COLOR);
+            } else if (id == R.id.menu_sort_by_size) {
+                launcherActivity.sortApps(Constants.SORT_BY_SIZE);
+            } else if (id == R.id.menu_sort_by_update_time) {
+                launcherActivity.sortApps(Constants.SORT_BY_UPDATE_TIME);
+            } else if (id == R.id.menu_sort_by_recent_use) {
+                launcherActivity.sortApps(Constants.SORT_BY_RECENT_OPEN);
             }
             return true;
         });
@@ -215,10 +185,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void setFlowLayoutAlignment(View view) {
-
         Context context;
-        // set theme
-        // if theme is  wallpaper i.e. transparent then we have to show other theme:
         if (DbUtils.getTheme() == R.style.Wallpaper)
             context = new ContextThemeWrapper(getContext(), R.style.AppTheme);
         else
@@ -228,21 +195,17 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         popupMenu.getMenuInflater().inflate(R.menu.alignment_popup, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.menu_center:
-                    launcherActivity.setFlowLayoutAlignment(Gravity.CENTER | Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-                    break;
-                case R.id.menu_end:
-                    launcherActivity.setFlowLayoutAlignment(Gravity.END | Gravity.CENTER_VERTICAL);
-                    break;
-                case R.id.menu_start:
-                    launcherActivity.setFlowLayoutAlignment(Gravity.START | Gravity.CENTER_VERTICAL);
-                    break;
+            int id = menuItem.getItemId();
+            if (id == R.id.menu_center) {
+                launcherActivity.setFlowLayoutAlignment(Gravity.CENTER | Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
+            } else if (id == R.id.menu_end) {
+                launcherActivity.setFlowLayoutAlignment(Gravity.END | Gravity.CENTER_VERTICAL);
+            } else if (id == R.id.menu_start) {
+                launcherActivity.setFlowLayoutAlignment(Gravity.START | Gravity.CENTER_VERTICAL);
             }
             return true;
         });
         popupMenu.show();
-
     }
 
     private void randomColor() {
@@ -363,10 +326,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void fontSelection(View view) {
-
         Context context;
-        // set theme
-        // if theme wallpaper ie transparent then we have to show other theme
         if (DbUtils.getTheme() == R.style.Wallpaper)
             context = new ContextThemeWrapper(getContext(), R.style.AppTheme);
         else
@@ -376,24 +336,20 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         popupMenu.getMenuInflater().inflate(R.menu.font_selection_popup, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.menu_choose_fonts:
-                    setFonts();
-                    break;
-                case R.id.menu_default_font: {
-                    if (DbUtils.isFontExists()) {
-                        DbUtils.removeFont();
-                        launcherActivity.setFont();
-                        launcherActivity.loadApps();
-                        cancel();
-                        break;
-                    }
+            int id = menuItem.getItemId();
+            if (id == R.id.menu_choose_fonts) {
+                setFonts();
+            } else if (id == R.id.menu_default_font) {
+                if (DbUtils.isFontExists()) {
+                    DbUtils.removeFont();
+                    launcherActivity.setFont();
+                    launcherActivity.loadApps();
+                    cancel();
                 }
             }
             return true;
         });
         popupMenu.show();
-
     }
 
 }

@@ -21,6 +21,8 @@ package io.github.sankalp.lunox;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AppOpsManager;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -40,6 +42,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
+import android.provider.Settings;
+import android.provider.Settings.Global;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -248,6 +252,9 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
         // initGestures();
 
+        // Check permissions before loading apps
+        checkAndRequestPermissions();
+
         // loads the apps
         loadApps();
         // register the receiver for installed, uninstall, update apps and shortcut pwa add
@@ -286,12 +293,8 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            switch (theme) {
-                case R.style.White:
-                case R.style.WhiteOnGrey:
-                case R.style.BlackOnGrey: {
-                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                }
+            if (theme == R.style.White || theme == R.style.WhiteOnGrey || theme == R.style.BlackOnGrey) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
         }
     }
@@ -318,6 +321,15 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(startupIntent, 0);
+
+        // For Android 11+ (API 30+), also try alternative method if first method returns few apps
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && activities.size() < 10) {
+            // Try alternative method for better app detection
+            List<ResolveInfo> alternativeActivities = pm.queryIntentActivities(startupIntent, PackageManager.MATCH_ALL);
+            if (alternativeActivities.size() > activities.size()) {
+                activities = alternativeActivities;
+            }
+        }
 
         // check whether our app list is already initialized if yes then clear this(when new app or shortcut installed)
         if (mAppsList != null) {
@@ -547,14 +559,20 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (searching) {
-            mSearchBox.setVisibility(View.GONE);
-            searching = false;
-            imm.hideSoftInputFromWindow(mSearchBox.getWindowToken(), 0);
-            mHomeLayout.setPadding(DbUtils.getPaddingLeft(), DbUtils.getPaddingTop(), DbUtils.getPaddingRight(), DbUtils.getPaddingBottom());
-            sortApps(DbUtils.getSortsTypes());
+        // Check if we need to reload apps (e.g., after returning from settings)
+        if (mAppsList != null && mAppsList.size() < 10) {
+            // If we have very few apps, try reloading in case permissions were granted
+            loadApps();
         }
+        
+        // Check if search box is visible and hide it if needed
+        if (mSearchBox.getVisibility() == View.VISIBLE) {
+            mSearchBox.setVisibility(View.GONE);
+            mHomeLayout.setPadding(DbUtils.getPaddingLeft(), DbUtils.getPaddingTop(), DbUtils.getPaddingRight(), DbUtils.getPaddingBottom());
+        }
+        
+        // Reset search state
+        searching = false;
     }
 
     @Override
@@ -637,38 +655,29 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.menu_color:
-                    changeColorSize(activityName, view);
-                    break;
-                case R.id.menu_rename:
-                    renameApp(activityName, view.getText().toString());
-                    break;
-                case R.id.menu_freeze_size:
-                    freezeAppSize(activityName);
-                    break;
-                case R.id.menu_hide:
-                    hideApp(activityName);
-                    break;
-                case R.id.menu_uninstall:
-                    if (view.isShortcut()) {
-                        removeShortcut(view);
-                    } else {
-                        uninstallApp(activityName);
-                    }
-                    break;
-                case R.id.menu_app_info:
-                    showAppInfo(activityName);
-                    break;
-                case R.id.menu_reset_to_default:
-                    resetApp(activityName);
-                    break;
-                case R.id.menu_reset_color:
-                    resetAppColor(activityName);
-                    break;
-
-                default:
-                    return true;
+            int id = menuItem.getItemId();
+            if (id == R.id.menu_color) {
+                changeColorSize(activityName, view);
+            } else if (id == R.id.menu_rename) {
+                renameApp(activityName, view.getText().toString());
+            } else if (id == R.id.menu_freeze_size) {
+                freezeAppSize(activityName);
+            } else if (id == R.id.menu_hide) {
+                hideApp(activityName);
+            } else if (id == R.id.menu_uninstall) {
+                if (view.isShortcut()) {
+                    removeShortcut(view);
+                } else {
+                    uninstallApp(activityName);
+                }
+            } else if (id == R.id.menu_app_info) {
+                showAppInfo(activityName);
+            } else if (id == R.id.menu_reset_to_default) {
+                resetApp(activityName);
+            } else if (id == R.id.menu_reset_color) {
+                resetAppColor(activityName);
+            } else {
+                return true;
             }
             return true;
         });
@@ -893,7 +902,11 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
                     loadApps();
                 }
             };
-            registerReceiver(broadcastReceiverAppInstall, intentFilter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(broadcastReceiverAppInstall, intentFilter, Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                registerReceiver(broadcastReceiverAppInstall, intentFilter);
+            }
         }
 
         //shortcut install receiver
@@ -922,7 +935,11 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
                     }
                 }
             };
-            registerReceiver(broadcastReceiverShortcutInstall, filter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(broadcastReceiverShortcutInstall, filter, Context.RECEIVER_NOT_EXPORTED);
+            } else {
+                registerReceiver(broadcastReceiverShortcutInstall, filter);
+            }
         }
 
     }
@@ -1313,5 +1330,111 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             }
             return null;
         }
+    }
+
+    /**
+     * Check and request necessary permissions for app detection
+     */
+    private void checkAndRequestPermissions() {
+        // Check if permissions dialog was already shown
+        if (DbUtils.isPermissionDialogShown()) {
+            return;
+        }
+
+        // Create a comprehensive permission request dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Welcome to Lunox! 🚀");
+        builder.setMessage("To provide the best experience, Lunox needs a few permissions:\n\n" +
+                "📱 **Usage Access**: To show all your installed apps\n" +
+                "🔒 **Device Admin**: To manage app freezing and advanced features\n\n" +
+                "These permissions help Lunox work properly and show all your apps.");
+        
+        builder.setIcon(android.R.drawable.ic_dialog_info);
+        builder.setCancelable(false);
+        
+        builder.setPositiveButton("Grant Permissions", (dialog, which) -> {
+            requestPermissions();
+        });
+        
+        builder.setNegativeButton("Skip for Now", (dialog, which) -> {
+            DbUtils.setPermissionDialogShown(true);
+        });
+        
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Request all necessary permissions
+     */
+    private void requestPermissions() {
+        // Check and request Usage Access permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            AppOpsManager appOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+            int mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    android.os.Process.myUid(), getPackageName());
+            if (mode != AppOpsManager.MODE_ALLOWED) {
+                showUsageAccessDialog();
+            }
+        }
+        
+        // Check and request Device Admin permission
+        if (!DeviceAdminManager.isDeviceAdminActive(this)) {
+            showDeviceAdminDialog();
+        }
+        
+        DbUtils.setPermissionDialogShown(true);
+    }
+
+    /**
+     * Show dialog to guide user to enable usage access
+     */
+    private void showUsageAccessDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("📱 Usage Access Required");
+        builder.setMessage("To show all your installed apps, please enable 'Usage Access' for Lunox:\n\n" +
+                "1. Tap 'Open Settings'\n" +
+                "2. Find 'Lunox Dev' in the list\n" +
+                "3. Toggle 'Allow usage access' ON\n" +
+                "4. Return to Lunox\n\n" +
+                "This helps Lunox detect all your apps properly.");
+        
+        builder.setIcon(android.R.drawable.ic_menu_manage);
+        builder.setCancelable(false);
+        
+        builder.setPositiveButton("Open Settings", (dialog, which) -> {
+            Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+            startActivity(intent);
+        });
+        
+        builder.setNegativeButton("Later", null);
+        
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Show dialog to guide user to enable device admin
+     */
+    private void showDeviceAdminDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("🔒 Device Admin Required");
+        builder.setMessage("Device Admin permission enables advanced features like:\n\n" +
+                "• App freezing functionality\n" +
+                "• Enhanced app management\n" +
+                "• Better system integration\n\n" +
+                "This permission is safe and only used for launcher features.");
+        
+        builder.setIcon(android.R.drawable.ic_lock_lock);
+        builder.setCancelable(false);
+        
+        builder.setPositiveButton("Enable Device Admin", (dialog, which) -> {
+            DeviceAdminManager.requestDeviceAdminPermission(this);
+        });
+        
+        builder.setNegativeButton("Skip", null);
+        
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

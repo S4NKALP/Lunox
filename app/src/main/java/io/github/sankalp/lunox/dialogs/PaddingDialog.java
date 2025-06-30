@@ -127,101 +127,79 @@ public class PaddingDialog extends Dialog implements View.OnLongClickListener, V
 
     @Override
     public boolean onLongClick(View button) {
-        switch (button.getId()) {
-            case R.id.btn_left_minus:
-                runner((TextView) button, left, -2, Padding.LEFT);
-                break;
-            case R.id.btn_left_plus:
-                runner((TextView) button, left, 2, Padding.LEFT);
-                break;
-            case R.id.btn_right_minus:
-                runner((TextView) button, right, -2, Padding.RIGHT);
-                break;
-            case R.id.btn_right_plus:
-                runner((TextView) button, right, 2, Padding.RIGHT);
-                break;
-            case R.id.btn_top_minus:
-                runner((TextView) button, top, -2, Padding.TOP);
-                break;
-            case R.id.btn_top_plus:
-                runner((TextView) button, top, 2, Padding.TOP);
-                break;
-            case R.id.btn_bottom_minus:
-                runner((TextView) button, bottom, -2, Padding.BOTTOM);
-                break;
-            case R.id.btn_bottom_plus:
-                runner((TextView) button, bottom, 2, Padding.BOTTOM);
-                break;
+        int id = button.getId();
+        if (id == R.id.btn_left_minus) {
+            runner((TextView) button, left, -2, Padding.LEFT);
+        } else if (id == R.id.btn_left_plus) {
+            runner((TextView) button, left, 2, Padding.LEFT);
+        } else if (id == R.id.btn_right_minus) {
+            runner((TextView) button, right, -2, Padding.RIGHT);
+        } else if (id == R.id.btn_right_plus) {
+            runner((TextView) button, right, 2, Padding.RIGHT);
+        } else if (id == R.id.btn_top_minus) {
+            runner((TextView) button, top, -2, Padding.TOP);
+        } else if (id == R.id.btn_top_plus) {
+            runner((TextView) button, top, 2, Padding.TOP);
+        } else if (id == R.id.btn_bottom_minus) {
+            runner((TextView) button, bottom, -2, Padding.BOTTOM);
+        } else if (id == R.id.btn_bottom_plus) {
+            runner((TextView) button, bottom, 2, Padding.BOTTOM);
         }
-
         return true;
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_left_minus:
-                //decrease the value as minus button is pressed
-                leftInt--;
-                // check the lower limit i.e. 0
-                if (leftInt < MIN_PADDING) {
-                    leftInt = MIN_PADDING;
-                }
-                //reflect it on screen
-                left.setText(String.valueOf(leftInt));
-                break;
-            case R.id.btn_left_plus:
-                leftInt++;
-                // check the upper limit
-                if (leftInt > MAX_PADDING_LEFT) {
-                    leftInt = MAX_PADDING_LEFT;
-                }
-                left.setText(String.valueOf(leftInt));
-                break;
-            case R.id.btn_right_minus:
-                rightInt--;
-                if (rightInt < MIN_PADDING) {
-                    rightInt = MIN_PADDING;
-                }
-                right.setText(String.valueOf(rightInt));
-                break;
-            case R.id.btn_right_plus:
-                rightInt++;
-                if (rightInt > MAX_PADDING_RIGHT) {
-                    rightInt = MAX_PADDING_RIGHT;
-                }
-                right.setText(String.valueOf(rightInt));
-                break;
-            case R.id.btn_top_minus:
-                topInt--;
-                if (topInt < MIN_PADDING) {
-                    topInt = MIN_PADDING;
-                }
-                top.setText(String.valueOf(topInt));
-                break;
-            case R.id.btn_top_plus:
-                topInt++;
-                if (topInt > MAX_PADDING_TOP) {
-                    topInt = MAX_PADDING_TOP;
-                }
-                top.setText(String.valueOf(topInt));
-                break;
-            case R.id.btn_bottom_minus:
-                bottomInt--;
-                if (bottomInt < MIN_PADDING) {
-                    bottomInt = MIN_PADDING;
-                }
-                bottom.setText(String.valueOf(bottomInt));
-                break;
-            case R.id.btn_bottom_plus:
-                bottomInt++;
-                if (bottomInt > MAX_PADDING_BOTTOM) {
-                    bottomInt = MAX_PADDING_BOTTOM;
-                }
-                bottom.setText(String.valueOf(bottomInt));
-                break;
+        int id = view.getId();
+        if (id == R.id.btn_left_minus) {
+            leftInt--;
+            if (leftInt < MIN_PADDING) {
+                leftInt = MIN_PADDING;
+            }
+            left.setText(String.valueOf(leftInt));
+        } else if (id == R.id.btn_left_plus) {
+            leftInt++;
+            if (leftInt > MAX_PADDING_LEFT) {
+                leftInt = MAX_PADDING_LEFT;
+            }
+            left.setText(String.valueOf(leftInt));
+        } else if (id == R.id.btn_right_minus) {
+            rightInt--;
+            if (rightInt < MIN_PADDING) {
+                rightInt = MIN_PADDING;
+            }
+            right.setText(String.valueOf(rightInt));
+        } else if (id == R.id.btn_right_plus) {
+            rightInt++;
+            if (rightInt > MAX_PADDING_RIGHT) {
+                rightInt = MAX_PADDING_RIGHT;
+            }
+            right.setText(String.valueOf(rightInt));
+        } else if (id == R.id.btn_top_minus) {
+            topInt--;
+            if (topInt < MIN_PADDING) {
+                topInt = MIN_PADDING;
+            }
+            top.setText(String.valueOf(topInt));
+        } else if (id == R.id.btn_top_plus) {
+            topInt++;
+            if (topInt > MAX_PADDING_TOP) {
+                topInt = MAX_PADDING_TOP;
+            }
+            top.setText(String.valueOf(topInt));
+        } else if (id == R.id.btn_bottom_minus) {
+            bottomInt--;
+            if (bottomInt < MIN_PADDING) {
+                bottomInt = MIN_PADDING;
+            }
+            bottom.setText(String.valueOf(bottomInt));
+        } else if (id == R.id.btn_bottom_plus) {
+            bottomInt++;
+            if (bottomInt > MAX_PADDING_BOTTOM) {
+                bottomInt = MAX_PADDING_BOTTOM;
+            }
+            bottom.setText(String.valueOf(bottomInt));
         }
-        // apply all padding to home layout
         homeLayout.setPadding(leftInt, topInt, rightInt, bottomInt);
     }
 

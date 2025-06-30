@@ -51,31 +51,23 @@ public class ThemeSelectorDialog extends Dialog implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.t1:
-                setTheme(R.style.AppTheme);
-                break;
-            case R.id.t2:
-                setTheme(R.style.Wallpaper);
-                break;
-            case R.id.t3:
-                setTheme(R.style.Black);
-                break;
-            case R.id.t4:
-                setTheme(R.style.White);
-                break;
-            case R.id.t5:
-                setTheme(R.style.WhiteOnGrey);
-                break;
-            case R.id.t6:
-                setTheme(R.style.BlackOnGrey);
-                break;
-            case R.id.t35:
-                setTheme(R.style.Hacker_green);
-                break;
-            case R.id.t36:
-                setTheme(R.style.Hacker_red);
-                break;
+        int id = view.getId();
+        if (id == R.id.t1) {
+            setTheme(R.style.AppTheme);
+        } else if (id == R.id.t2) {
+            setTheme(R.style.Wallpaper);
+        } else if (id == R.id.t3) {
+            setTheme(R.style.Black);
+        } else if (id == R.id.t4) {
+            setTheme(R.style.White);
+        } else if (id == R.id.t5) {
+            setTheme(R.style.WhiteOnGrey);
+        } else if (id == R.id.t6) {
+            setTheme(R.style.BlackOnGrey);
+        } else if (id == R.id.t35) {
+            setTheme(R.style.Hacker_green);
+        } else if (id == R.id.t36) {
+            setTheme(R.style.Hacker_red);
         }
     }
 

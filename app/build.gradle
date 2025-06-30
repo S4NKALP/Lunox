@@ -2,52 +2,48 @@ apply plugin: 'com.android.application'
 
 
 android {
+    namespace "io.github.sankalp.lunox"
     compileSdkVersion 34
     buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "io.github.sankalp.lunox"
-        minSdkVersion 14
+        minSdkVersion 26
         targetSdkVersion 34
         versionCode 19
         versionName "0.19"
         //resConfigs "en", "de"
         buildConfigField "boolean", "enableColorSniffer", "false"
     }
+    
+    buildFeatures {
+        buildConfig true
+    }
+
     buildTypes {
         debug {
-            def workingBranch = getGitWorkingBranch()
-            def normalizedWorkingBranch = workingBranch.replaceFirst("^[^A-Za-z]+", "").replaceAll("[^0-9A-Za-z]+", "")
-            if (normalizedWorkingBranch.isEmpty() || workingBranch == "master" ) {
-                applicationIdSuffix ".debug"
-                resValue "string", "app_name", "Last Launcher Dev"
-            } else {
-                archivesBaseName = 'Last_Launcher_' + normalizedWorkingBranch
-                applicationIdSuffix ".debug." + normalizedWorkingBranch
-                resValue "string", "app_name", "Last Launcher-" + workingBranch
-            }
-
+            applicationIdSuffix ".debug"
+            resValue "string", "app_name", "Lunox Dev"
             debuggable true
             jniDebuggable true
             versionNameSuffix "-debug"
             minifyEnabled false
             shrinkResources false
-
         }
         release {
             debuggable false
             jniDebuggable false
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             zipAlignEnabled true
-            resValue "string", "app_name", "Last Launcher"
+            resValue "string", "app_name", "Lunox"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     lintOptions {
@@ -59,7 +55,7 @@ android {
         variant.outputs.all {
             def date = new Date()
             def formattedDate = date.format('yyyyMMddHHmmss')
-            outputFileName = "Last-Launcher-${variant.name}-${variant.versionName}-${formattedDate}.apk"
+            outputFileName = "Lunox-${variant.name}-${variant.versionName}-${formattedDate}.apk"
         }
     }
     packagingOptions {
@@ -69,7 +65,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':flowlayout:layouts')
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.13'
 }
 
 static String getGitWorkingBranch() {

@@ -53,19 +53,14 @@ public class ColorSnifferDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.text_color_sniffer_on_off:
-                onOffColorSnifferCustomisation();
-                break;
-            case R.id.color_sniffer_clipboard:
-                launcherActivity.clipboardData();
-                break;
-            case R.id.color_sniffer_external_app: {
-                if (DbUtils.isExternalSourceColor())
-                    startColorSnifferApp();
-
-                break;
-            }
+        int id = view.getId();
+        if (id == R.id.text_color_sniffer_on_off) {
+            onOffColorSnifferCustomisation();
+        } else if (id == R.id.color_sniffer_clipboard) {
+            launcherActivity.clipboardData();
+        } else if (id == R.id.color_sniffer_external_app) {
+            if (DbUtils.isExternalSourceColor())
+                startColorSnifferApp();
         }
     }
 
