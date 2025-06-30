@@ -71,7 +71,6 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_global_settings);
 
-
         findViewById(R.id.settings_themes).setOnClickListener(this);
         freezeSize = findViewById(R.id.settings_freeze_size);
         freezeSize.setOnClickListener(this);

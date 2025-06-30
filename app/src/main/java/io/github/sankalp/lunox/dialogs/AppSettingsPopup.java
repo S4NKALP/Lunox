@@ -60,16 +60,6 @@ public class AppSettingsPopup extends Dialog implements View.OnClickListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dialog_app_settings);
 
-        // Set the dialog background to match popup style with border
-        Window window = getWindow();
-        if (window != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                window.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.popup_background, null));
-            } else {
-                window.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.popup_background));
-            }
-        }
-
         // Set up click listeners
         findViewById(R.id.app_settings_color).setOnClickListener(this);
         findViewById(R.id.app_settings_rename).setOnClickListener(this);
