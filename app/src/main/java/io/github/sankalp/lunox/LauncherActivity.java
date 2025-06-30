@@ -88,7 +88,6 @@ import io.github.sankalp.lunox.dialogs.GlobalColorSizeDialog;
 import io.github.sankalp.lunox.dialogs.GlobalSettingsDialog;
 import io.github.sankalp.lunox.dialogs.HiddenAppsDialogs;
 import io.github.sankalp.lunox.dialogs.PaddingDialog;
-import io.github.sankalp.lunox.dialogs.PermissionDialog;
 import io.github.sankalp.lunox.dialogs.RenameInputDialogs;
 import io.github.sankalp.lunox.model.Apps;
 import io.github.sankalp.lunox.model.Shortcut;
@@ -304,8 +303,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
         // initGestures();
 
-        // Check permissions before loading apps
-        checkAndRequestPermissions();
+        // No permissions needed for basic launcher functionality
 
         // loads the apps
         loadApps();
@@ -1326,25 +1324,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    /**
-     * Check and request necessary permissions for app detection
-     */
-    private void checkAndRequestPermissions() {
-        // Check if permissions dialog was already shown
-        if (DbUtils.isPermissionDialogShown()) {
-            return;
-        }
 
-        // Create the new permission dialog with proper theming
-        Context ctx;
-        if (DbUtils.getTheme() == R.style.Wallpaper)
-            ctx = new ContextThemeWrapper(this, R.style.AppTheme);
-        else
-            ctx = new ContextThemeWrapper(this, DbUtils.getTheme());
-
-        PermissionDialog permissionDialog = new PermissionDialog(ctx, this);
-        permissionDialog.show();
-    }
 
     /**
      * Show dialog to enable accessibility service for double tap to lock

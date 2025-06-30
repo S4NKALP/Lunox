@@ -1,6 +1,6 @@
 /*
- * Last Launcher
- * Copyright (C) 2019 Shubham Tyagi
+ * Lunox
+ * Copyright (C) 2025 Sankalp Tharu
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,6 @@ public class DbUtils {
     private static final String GLOBAL_SIZE_ADDITION_EXTRA = "global_size_addition_extra";
     private static final String APPS_COLORS_DEFAULT = "apps_color_default";
     private static final String APPS_SORTS_TYPE = "apps_sorts_types";
-    private static final String PERMISSION_DIALOG_SHOWN = "permission_dialog_shown";
     private static final String DOUBLE_TAP_TO_LOCK = "double_tap_to_lock";
 
 
@@ -379,19 +378,7 @@ public class DbUtils {
         SpUtils.getInstance().putInt(APPS_SORTS_TYPE, type);
     }
 
-    /**
-     * Check if permission dialog has been shown
-     */
-    public static boolean isPermissionDialogShown() {
-        return SpUtils.getInstance().getBoolean(PERMISSION_DIALOG_SHOWN, false);
-    }
 
-    /**
-     * Set permission dialog as shown
-     */
-    public static void setPermissionDialogShown(boolean shown) {
-        SpUtils.getInstance().putBoolean(PERMISSION_DIALOG_SHOWN, shown);
-    }
 
     /**
      * Check if double tap to lock is enabled

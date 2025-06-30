@@ -93,9 +93,6 @@
 
 
 
-    <!-- Permission Dialog Strings -->
-    <string name="permission_dialog_title">Welcome to Lunox! 🚀</string>
-    <string name="permission_dialog_message">To provide the best launcher experience, Lunox needs this permission:\n\n<b>Usage Access</b> - Display all your apps\n\nTap the permission below to enable it.</string>
 
 
     <!-- Frozen apps dialog title -->
