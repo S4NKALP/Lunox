@@ -50,6 +50,7 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.util.ArrayMap;
 import android.view.ContextThemeWrapper;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -94,6 +95,7 @@ import io.github.sankalp.lunox.utils.CrashUtils;
 import io.github.sankalp.lunox.utils.DbUtils;
 import io.github.sankalp.lunox.utils.DeviceAdminManager;
 import io.github.sankalp.lunox.utils.Gestures;
+import io.github.sankalp.lunox.utils.NotificationPanelManager;
 import io.github.sankalp.lunox.utils.ShortcutUtils;
 import io.github.sankalp.lunox.utils.Utils;
 import io.github.sankalp.lunox.views.textview.AppTextView;
@@ -164,6 +166,9 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     private Gestures detector;
     private ShortcutUtils shortcutUtils;
 
+    // For handling long press on empty areas
+    private GestureDetector longPressDetector;
+
     private static final TextWatcher mTextWatcher= new TextWatcher() {
 
         @Override
@@ -207,7 +212,35 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //pass touch event to detector
         detector.onTouchEvent(ev);
+        longPressDetector.onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
+    }
+
+    /**
+     * Helper method to find the view at the given coordinates
+     */
+    private View findViewAt(float x, float y) {
+        // Convert coordinates to the home layout's coordinate system
+        int[] location = new int[2];
+        mHomeLayout.getLocationOnScreen(location);
+
+        // Check if the touch is within the home layout bounds
+        if (x >= location[0] && x <= location[0] + mHomeLayout.getWidth() &&
+            y >= location[1] && y <= location[1] + mHomeLayout.getHeight()) {
+
+            // Check each child view in the home layout
+            for (int i = 0; i < mHomeLayout.getChildCount(); i++) {
+                View child = mHomeLayout.getChildAt(i);
+                child.getLocationOnScreen(location);
+
+                if (x >= location[0] && x <= location[0] + child.getWidth() &&
+                    y >= location[1] && y <= location[1] + child.getHeight()) {
+                    return child;
+                }
+            }
+        }
+
+        return null; // No specific view found, it's empty space
     }
 
     @Override
@@ -251,6 +284,20 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         mHomeLayout.setPadding(DbUtils.getPaddingLeft(), DbUtils.getPaddingTop(), DbUtils.getPaddingRight(), DbUtils.getPaddingBottom());
 
         detector = new Gestures(this, this);
+
+        // Initialize long press detector for empty areas
+        longPressDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public void onLongPress(MotionEvent e) {
+                // Check if the touch is on an empty area (not on an app)
+                View touchedView = findViewAt(e.getX(), e.getY());
+                if (!(touchedView instanceof AppTextView)) {
+                    // Show launcher settings on long press in free space
+                    dialogs = new GlobalSettingsDialog(LauncherActivity.this, LauncherActivity.this);
+                    dialogs.show();
+                }
+            }
+        });
 
         // initGestures();
 
@@ -599,7 +646,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             // show app setting
             showPopup((String) view.getTag(), (AppTextView) view);
         } else if (view instanceof FlowLayout) {
-            // show launcher setting
+            // show launcher setting for FlowLayout (this handles long press on FlowLayout itself)
             dialogs = new GlobalSettingsDialog(this, this);
             dialogs.show();
         }
@@ -607,9 +654,9 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     private void showPopup(String activityName, AppTextView view) {
-        // show app settings popup instead of popup menu
+        // show app settings dialog instead of popup menu
         AppSettingsPopup popup = new AppSettingsPopup(this, activityName, view, this);
-        popup.showAsDropDown(view);
+        popup.show();
     }
 
     //reset the app color to default color;
@@ -1152,17 +1199,15 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     @Override
     public void onSwipe(Gestures.Direction direction) {
         if (direction == Gestures.Direction.SWIPE_UP) {
+            // Open search bar on swipe up (down to up gesture)
             searching = true;
             mSearchBox.setText("");
             mSearchBox.setVisibility(View.VISIBLE);
             mSearchBox.requestFocus();
             imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
         } else if (direction == Gestures.Direction.SWIPE_DOWN) {
-            if (searching) {
-                mSearchBox.setVisibility(View.GONE);
-                imm.hideSoftInputFromWindow(mSearchBox.getWindowToken(), 0);
-                onResume();
-            }
+            // Open notification panel on swipe down (up to down gesture)
+            NotificationPanelManager.expandNotificationPanel(this);
         }
     }
 
@@ -1172,12 +1217,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         DeviceAdminManager.lockDevice(this);
     }
 
-    @Override
-    public void onLongPress() {
-        // Show launcher settings on long press in free space
-        dialogs = new GlobalSettingsDialog(this, this);
-        dialogs.show();
-    }
+
 
     static class SearchTask extends AsyncTask<CharSequence, Void, ArrayList<Apps>> {
         @Override

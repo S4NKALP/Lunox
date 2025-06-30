@@ -79,11 +79,6 @@ public class Gestures extends GestureDetector.SimpleOnGestureListener {
         return true;
     }
 
-    @Override
-    public void onLongPress(MotionEvent e) {
-        this.listener.onLongPress();
-    }
-
 
     public enum Direction {
         SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT
@@ -93,8 +88,6 @@ public class Gestures extends GestureDetector.SimpleOnGestureListener {
         void onSwipe(Direction direction);
 
         void onDoubleTap();
-
-        void onLongPress();
     }
 
 }

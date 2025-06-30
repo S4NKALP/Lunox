@@ -18,12 +18,12 @@
 
 package io.github.sankalp.lunox.dialogs;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.View;
-import android.widget.PopupWindow;
+import android.view.Window;
 import android.widget.TextView;
 
 import io.github.sankalp.lunox.LauncherActivity;
@@ -32,9 +32,9 @@ import io.github.sankalp.lunox.utils.DbUtils;
 import io.github.sankalp.lunox.views.textview.AppTextView;
 
 /**
- * App settings popup that shows options for individual apps
+ * App settings dialog that shows options for individual apps
  */
-public class AppSettingsPopup extends PopupWindow implements View.OnClickListener {
+public class AppSettingsPopup extends Dialog implements View.OnClickListener {
 
     private final LauncherActivity launcherActivity;
     private final Context context;
@@ -51,46 +51,43 @@ public class AppSettingsPopup extends PopupWindow implements View.OnClickListene
         this.activityName = activityName;
         this.appTextView = appTextView;
         this.launcherActivity = launcherActivity;
-
-        initPopup();
     }
 
-    private void initPopup() {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View contentView = inflater.inflate(R.layout.dialog_app_settings, null);
-        setContentView(contentView);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // no old title: Last Launcher use Activity class not AppCompatActivity so it show very old title
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.dialog_app_settings);
 
-        // Set popup properties
-        setWidth(android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-        setHeight(android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-        setFocusable(true);
-        setOutsideTouchable(true);
-
-        // Set background to match the dialog style with border
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            setBackgroundDrawable(context.getResources().getDrawable(R.drawable.popup_background, null));
-        } else {
-            setBackgroundDrawable(context.getResources().getDrawable(R.drawable.popup_background));
+        // Set the dialog background to match popup style with border
+        Window window = getWindow();
+        if (window != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                window.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.popup_background, null));
+            } else {
+                window.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.popup_background));
+            }
         }
 
         // Set up click listeners
-        contentView.findViewById(R.id.app_settings_color).setOnClickListener(this);
-        contentView.findViewById(R.id.app_settings_rename).setOnClickListener(this);
+        findViewById(R.id.app_settings_color).setOnClickListener(this);
+        findViewById(R.id.app_settings_rename).setOnClickListener(this);
 
-        freezeSize = contentView.findViewById(R.id.app_settings_freeze_size);
+        freezeSize = findViewById(R.id.app_settings_freeze_size);
         freezeSize.setOnClickListener(this);
 
-        contentView.findViewById(R.id.app_settings_app_info).setOnClickListener(this);
-        contentView.findViewById(R.id.app_settings_reset_color).setOnClickListener(this);
+        findViewById(R.id.app_settings_app_info).setOnClickListener(this);
+        findViewById(R.id.app_settings_reset_color).setOnClickListener(this);
 
-        hideApp = contentView.findViewById(R.id.app_settings_hide);
+        hideApp = findViewById(R.id.app_settings_hide);
         hideApp.setOnClickListener(this);
 
-        resetToDefault = contentView.findViewById(R.id.app_settings_reset_to_default);
+        resetToDefault = findViewById(R.id.app_settings_reset_to_default);
         resetToDefault.setOnClickListener(this);
         resetToDefault.setTextColor(Color.parseColor("#E53935"));
 
-        uninstallApp = contentView.findViewById(R.id.app_settings_uninstall);
+        uninstallApp = findViewById(R.id.app_settings_uninstall);
         uninstallApp.setOnClickListener(this);
         uninstallApp.setTextColor(Color.parseColor("#E53935"));
 
@@ -105,15 +102,11 @@ public class AppSettingsPopup extends PopupWindow implements View.OnClickListene
         if (appTextView.isShortcut()) {
             uninstallApp.setText(R.string.remove);
             hideApp.setVisibility(View.GONE);
-            contentView.findViewById(R.id.app_settings_rename).setVisibility(View.GONE);
-            contentView.findViewById(R.id.app_settings_app_info).setVisibility(View.GONE);
+            findViewById(R.id.app_settings_rename).setVisibility(View.GONE);
+            findViewById(R.id.app_settings_app_info).setVisibility(View.GONE);
         } else {
             hideApp.setTextColor(Color.parseColor("#E53935"));
         }
-    }
-
-    public void showAsDropDown(View anchor) {
-        showAsDropDown(anchor, 0, 0, Gravity.START);
     }
 
     @Override
@@ -121,32 +114,32 @@ public class AppSettingsPopup extends PopupWindow implements View.OnClickListene
         int id = view.getId();
         if (id == R.id.app_settings_color) {
             launcherActivity.changeColorSize(activityName, appTextView);
-            dismiss();
+            cancel();
         } else if (id == R.id.app_settings_rename) {
             launcherActivity.renameApp(activityName, appTextView.getText().toString());
-            dismiss();
+            cancel();
         } else if (id == R.id.app_settings_freeze_size) {
             launcherActivity.freezeAppSize(activityName);
-            dismiss();
+            cancel();
         } else if (id == R.id.app_settings_app_info) {
             launcherActivity.showAppInfo(activityName);
-            dismiss();
+            cancel();
         } else if (id == R.id.app_settings_reset_color) {
             launcherActivity.resetAppColor(activityName);
-            dismiss();
+            cancel();
         } else if (id == R.id.app_settings_hide) {
             launcherActivity.hideApp(activityName);
-            dismiss();
+            cancel();
         } else if (id == R.id.app_settings_reset_to_default) {
             launcherActivity.resetApp(activityName);
-            dismiss();
+            cancel();
         } else if (id == R.id.app_settings_uninstall) {
             if (appTextView.isShortcut()) {
                 launcherActivity.removeShortcut(appTextView);
             } else {
                 launcherActivity.uninstallApp(activityName);
             }
-            dismiss();
+            cancel();
         }
     }
 }
