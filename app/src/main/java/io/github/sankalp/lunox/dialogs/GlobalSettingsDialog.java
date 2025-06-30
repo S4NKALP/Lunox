@@ -18,6 +18,7 @@
 
 package io.github.sankalp.lunox.dialogs;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +39,9 @@ import java.util.Locale;
 import io.github.sankalp.lunox.BuildConfig;
 import io.github.sankalp.lunox.LauncherActivity;
 import io.github.sankalp.lunox.R;
+import io.github.sankalp.lunox.dialogs.DoubleTapLockDialog;
 import io.github.sankalp.lunox.model.Apps;
+import io.github.sankalp.lunox.utils.AccessibilityUtils;
 import io.github.sankalp.lunox.utils.Constants;
 import io.github.sankalp.lunox.utils.DbUtils;
 import io.github.sankalp.lunox.utils.Utils;
@@ -57,6 +60,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     private final LauncherActivity launcherActivity;
     private final Context context;
     private TextView freezeSize;
+    private TextView doubleTapLockButton;
 
     public GlobalSettingsDialog(Context context, LauncherActivity launcherActivity) {
         super(context);
@@ -102,12 +106,19 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         findViewById(R.id.settings_frozen_apps).setOnClickListener(this);
         findViewById(R.id.settings_hidden_apps).setOnClickListener(this);
 
+        // Double tap to lock setting
+        doubleTapLockButton = findViewById(R.id.settings_double_tap_lock);
+        doubleTapLockButton.setOnClickListener(this);
+
 
         //reflect the DB value
         if (DbUtils.isSizeFrozen()) {
             freezeSize.setText(R.string.unfreeze_app_size);
         } else
             freezeSize.setText(R.string.freeze_apps_size);
+
+        // Set double tap to lock button text
+        updateDoubleTapLockButtonText();
 
     }
 
@@ -145,6 +156,8 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
             cancel();
         } else if (id == R.id.settings_restart_launcher) {
             launcherActivity.recreate();
+        } else if (id == R.id.settings_double_tap_lock) {
+            toggleDoubleTapToLock();
         }
     }
 
@@ -276,6 +289,48 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
             //DO SOME ESTER EGG.. FOR DEBUG BUILD..
         }
 
+    }
+
+    private void toggleDoubleTapToLock() {
+        boolean currentState = DbUtils.isDoubleTapToLockEnabled();
+
+        if (currentState) {
+            // If currently enabled, just disable it directly
+            DbUtils.setDoubleTapToLock(false);
+            updateDoubleTapLockButtonText();
+        } else {
+            // If currently disabled, show the detailed dialog to explain and enable the feature
+            DoubleTapLockDialog doubleTapDialog = new DoubleTapLockDialog(context, launcherActivity);
+            doubleTapDialog.show();
+
+            // Update button text when dialog is dismissed
+            doubleTapDialog.setOnDismissListener(dialog -> updateDoubleTapLockButtonText());
+        }
+    }
+
+    private void updateDoubleTapLockButtonText() {
+        if (DbUtils.isDoubleTapToLockEnabled()) {
+            doubleTapLockButton.setText(R.string.double_tap_to_lock_enabled);
+        } else {
+            doubleTapLockButton.setText(R.string.double_tap_to_lock_disabled);
+        }
+    }
+
+    private void showAccessibilityServiceDialog() {
+        Context ctx;
+        if (DbUtils.getTheme() == R.style.Wallpaper)
+            ctx = new ContextThemeWrapper(getContext(), R.style.AppTheme);
+        else
+            ctx = new ContextThemeWrapper(getContext(), DbUtils.getTheme());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle("Enable Accessibility Service");
+        builder.setMessage("To use double tap to lock screen, please enable the Lunox Accessibility Service in Settings.");
+        builder.setPositiveButton("Open Settings", (dialog, which) -> {
+            AccessibilityUtils.openAccessibilitySettings(context);
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
     private void backup() {

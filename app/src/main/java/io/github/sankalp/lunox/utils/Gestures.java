@@ -30,12 +30,20 @@ public class Gestures extends GestureDetector.SimpleOnGestureListener {
 
     private final GestureDetector detector;
     private final OnSwipeListener listener;
+    private final OnDoubleTapListener doubleTapListener;
 
     public Gestures(Activity context,
                     OnSwipeListener onSwipeListener) {
+        this(context, onSwipeListener, null);
+    }
+
+    public Gestures(Activity context,
+                    OnSwipeListener onSwipeListener,
+                    OnDoubleTapListener onDoubleTapListener) {
 
         this.detector = new GestureDetector(context, this);
         this.listener = onSwipeListener;
+        this.doubleTapListener = onDoubleTapListener;
     }
 
     public void onTouchEvent(MotionEvent event) {
@@ -73,8 +81,14 @@ public class Gestures extends GestureDetector.SimpleOnGestureListener {
         return consumed;
     }
 
-
-
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        if (doubleTapListener != null) {
+            doubleTapListener.onDoubleTap(e);
+            return true;
+        }
+        return super.onDoubleTap(e);
+    }
 
     public enum Direction {
         SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT
@@ -82,6 +96,10 @@ public class Gestures extends GestureDetector.SimpleOnGestureListener {
 
     public interface OnSwipeListener {
         void onSwipe(Direction direction);
+    }
+
+    public interface OnDoubleTapListener {
+        void onDoubleTap(MotionEvent e);
     }
 
 }

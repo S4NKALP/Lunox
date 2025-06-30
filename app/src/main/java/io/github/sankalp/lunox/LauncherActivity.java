@@ -82,6 +82,7 @@ import java.util.Map;
 
 import io.github.sankalp.lunox.dialogs.AppSettingsPopup;
 import io.github.sankalp.lunox.dialogs.ColorSizeDialog;
+import io.github.sankalp.lunox.dialogs.DoubleTapLockDialog;
 import io.github.sankalp.lunox.dialogs.FrozenAppsDialogs;
 import io.github.sankalp.lunox.dialogs.GlobalColorSizeDialog;
 import io.github.sankalp.lunox.dialogs.GlobalSettingsDialog;
@@ -94,6 +95,7 @@ import io.github.sankalp.lunox.model.Shortcut;
 import io.github.sankalp.lunox.utils.CrashUtils;
 import io.github.sankalp.lunox.utils.DbUtils;
 
+import io.github.sankalp.lunox.utils.AccessibilityUtils;
 import io.github.sankalp.lunox.utils.Gestures;
 import io.github.sankalp.lunox.utils.NotificationPanelManager;
 import io.github.sankalp.lunox.utils.ShortcutUtils;
@@ -140,7 +142,8 @@ import static io.github.sankalp.lunox.utils.Constants.SORT_BY_UPDATE_TIME;
 @SuppressLint("NonConstantResourceId")
 public class LauncherActivity extends Activity implements View.OnClickListener,
         View.OnLongClickListener,
-        Gestures.OnSwipeListener {
+        Gestures.OnSwipeListener,
+        Gestures.OnDoubleTapListener {
 
 
     //region Field declarations
@@ -283,7 +286,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         //set padding ..
         mHomeLayout.setPadding(DbUtils.getPaddingLeft(), DbUtils.getPaddingTop(), DbUtils.getPaddingRight(), DbUtils.getPaddingBottom());
 
-        detector = new Gestures(this, this);
+        detector = new Gestures(this, this, this);
 
         // Initialize long press detector for empty areas
         longPressDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
@@ -1211,6 +1214,27 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
     }
 
+    @Override
+    public void onDoubleTap(MotionEvent e) {
+        // Check if double tap to lock is enabled
+        if (!DbUtils.isDoubleTapToLockEnabled()) {
+            return;
+        }
+
+        // Check if the double tap is on an empty area (not on an app)
+        View touchedView = findViewAt(e.getX(), e.getY());
+        if (!(touchedView instanceof AppTextView)) {
+            // Attempt to lock screen using accessibility service
+            boolean success = AccessibilityUtils.requestLockScreen(this);
+            if (!success) {
+                // Show message if accessibility service is not enabled
+                if (!AccessibilityUtils.isAccessibilityServiceEnabled(this)) {
+                    showAccessibilityServiceDialog();
+                }
+            }
+        }
+    }
+
 
 
 
@@ -1320,6 +1344,34 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
         PermissionDialog permissionDialog = new PermissionDialog(ctx, this);
         permissionDialog.show();
+    }
+
+    /**
+     * Show dialog to enable accessibility service for double tap to lock
+     */
+    private void showAccessibilityServiceDialog() {
+        Context ctx;
+        if (DbUtils.getTheme() == R.style.Wallpaper)
+            ctx = new ContextThemeWrapper(this, R.style.AppTheme);
+        else
+            ctx = new ContextThemeWrapper(this, DbUtils.getTheme());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        builder.setTitle("Enable Accessibility Service");
+        builder.setMessage("To use double tap to lock screen, please enable the Lunox Accessibility Service in Settings.");
+        builder.setPositiveButton("Open Settings", (dialog, which) -> {
+            AccessibilityUtils.openAccessibilitySettings(this);
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    /**
+     * Show detailed double tap to lock dialog
+     */
+    private void showDoubleTapLockDialog() {
+        dialogs = new DoubleTapLockDialog(this, this);
+        dialogs.show();
     }
 
 

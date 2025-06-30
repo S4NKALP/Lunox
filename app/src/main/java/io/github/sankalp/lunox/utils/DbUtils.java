@@ -62,6 +62,7 @@ public class DbUtils {
     private static final String APPS_COLORS_DEFAULT = "apps_color_default";
     private static final String APPS_SORTS_TYPE = "apps_sorts_types";
     private static final String PERMISSION_DIALOG_SHOWN = "permission_dialog_shown";
+    private static final String DOUBLE_TAP_TO_LOCK = "double_tap_to_lock";
 
 
     public static void init(Context context) {
@@ -390,6 +391,20 @@ public class DbUtils {
      */
     public static void setPermissionDialogShown(boolean shown) {
         SpUtils.getInstance().putBoolean(PERMISSION_DIALOG_SHOWN, shown);
+    }
+
+    /**
+     * Check if double tap to lock is enabled
+     */
+    public static boolean isDoubleTapToLockEnabled() {
+        return SpUtils.getInstance().getBoolean(DOUBLE_TAP_TO_LOCK, false);
+    }
+
+    /**
+     * Set double tap to lock preference
+     */
+    public static void setDoubleTapToLock(boolean enabled) {
+        SpUtils.getInstance().putBoolean(DOUBLE_TAP_TO_LOCK, enabled);
     }
 
     //  a simple ciphered counter: "opening counter" is a private thing
