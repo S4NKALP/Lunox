@@ -1,20 +1,12 @@
 /*
- * Lunox Launcher
- * Copyright (C) 2024 Sankalp
+ * Lunox
+ * Copyright (C) 2025 Sankalp Tharu
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This file is part of Last Launcher (forked).
+ * Licensed under the GNU General Public License v3 or later.
+ * See <http://www.gnu.org/licenses/>.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
 package io.github.sankalp.lunox.services;
 
@@ -32,41 +24,41 @@ import android.view.accessibility.AccessibilityEvent;
  * This service can perform global actions like simulating power key press
  */
 public class LockScreenAccessibilityService extends AccessibilityService {
-    
+
     private static final String TAG = "LockScreenAccessibilityService";
     private static LockScreenAccessibilityService instance;
-    
+
     public static final String ACTION_LOCK_SCREEN = "io.github.sankalp.lunox.ACTION_LOCK_SCREEN";
-    
+
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         Log.d(TAG, "Accessibility service created");
     }
-    
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         instance = null;
         Log.d(TAG, "Accessibility service destroyed");
     }
-    
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         // We don't need to handle accessibility events for this use case
     }
-    
+
     @Override
     public void onInterrupt() {
         Log.d(TAG, "Accessibility service interrupted");
     }
-    
+
     @Override
     protected boolean onKeyEvent(KeyEvent event) {
         return super.onKeyEvent(event);
     }
-    
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null && ACTION_LOCK_SCREEN.equals(intent.getAction())) {
@@ -74,7 +66,7 @@ public class LockScreenAccessibilityService extends AccessibilityService {
         }
         return START_NOT_STICKY;
     }
-    
+
     /**
      * Lock the screen using accessibility service global action
      */
@@ -96,7 +88,7 @@ public class LockScreenAccessibilityService extends AccessibilityService {
             Log.e(TAG, "Failed to lock screen", e);
         }
     }
-    
+
     /**
      * Simulate power button press using accessibility service
      */
@@ -113,14 +105,14 @@ public class LockScreenAccessibilityService extends AccessibilityService {
             Log.e(TAG, "Failed to simulate power button", e);
         }
     }
-    
+
     /**
      * Get the current instance of the accessibility service
      */
     public static LockScreenAccessibilityService getInstance() {
         return instance;
     }
-    
+
     /**
      * Check if the accessibility service is running
      */

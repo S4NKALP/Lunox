@@ -1,0 +1,15 @@
+*Beta release 9*
+
+* What's New in this release
+
+- FOrked from the original Last Launcher
+- Rename App Name
+- New App Icon
+- Added Swipe Up to Open Notifications Panel
+- Fixed Launcher Settings now work on all empty area
+- Added Double Tap to Lock Screen Feature
+
+
+* Project Shource codes Changes.
+
+- SDK targets 28-> 34 (android 13/14)

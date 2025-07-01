@@ -282,13 +282,8 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void defaultSettings() {
-        if (!BuildConfig.DEBUG) {
-            DbUtils.clearDB();
-            launcherActivity.recreate();
-        } else {
-            //DO SOME ESTER EGG.. FOR DEBUG BUILD..
-        }
-
+        DbUtils.clearDB();
+        launcherActivity.recreate();
     }
 
     private void toggleDoubleTapToLock() {

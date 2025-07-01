@@ -1197,18 +1197,20 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         loadApps();
     }
 
-    @Override
+     @Override
     public void onSwipe(Gestures.Direction direction) {
-        if (direction == Gestures.Direction.SWIPE_UP) {
-            // Open search bar on swipe up (down to up gesture)
+        if (direction == Gestures.Direction.SWIPE_RIGHT) {
             searching = true;
             mSearchBox.setText("");
             mSearchBox.setVisibility(View.VISIBLE);
             mSearchBox.requestFocus();
             imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
-        } else if (direction == Gestures.Direction.SWIPE_DOWN) {
-            // Open notification panel on swipe down (up to down gesture)
-            NotificationPanelManager.expandNotificationPanel(this);
+        } else if (direction == Gestures.Direction.SWIPE_LEFT) {
+            if (searching) {
+                mSearchBox.setVisibility(View.GONE);
+                imm.hideSoftInputFromWindow(mSearchBox.getWindowToken(), 0);
+                onResume();
+            }
         }
     }
 
