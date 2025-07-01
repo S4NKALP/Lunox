@@ -3,7 +3,7 @@ apply plugin: 'com.android.library'
 android {
     namespace "org.apmem.tools.layouts"
     compileSdkVersion 29
-    buildToolsVersion "35.0.1"
+    buildToolsVersion "34.0.0"
 
     defaultConfig {
         versionCode 2
