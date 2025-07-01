@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+// Load keystore properties
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
 android {
     namespace "io.github.sankalp.lunox"
@@ -15,9 +21,20 @@ android {
         //resConfigs "en", "de"
         buildConfigField "boolean", "enableColorSniffer", "false"
     }
-    
+
     buildFeatures {
         buildConfig true
+    }
+
+    signingConfigs {
+        release {
+            if (keystoreProperties['storeFile'] != null) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
     }
 
     buildTypes {
@@ -31,6 +48,7 @@ android {
             shrinkResources false
         }
         release {
+            signingConfig signingConfigs.release
             debuggable false
             jniDebuggable false
             minifyEnabled false
