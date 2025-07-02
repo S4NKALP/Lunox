@@ -62,6 +62,7 @@ public class DbUtils {
     private static final String APPS_COLORS_DEFAULT = "apps_color_default";
     private static final String APPS_SORTS_TYPE = "apps_sorts_types";
     private static final String DOUBLE_TAP_TO_LOCK = "double_tap_to_lock";
+    private static final String SEARCH_BAR_GESTURE = "search_bar_gesture";
 
 
     public static void init(Context context) {
@@ -392,6 +393,20 @@ public class DbUtils {
      */
     public static void setDoubleTapToLock(boolean enabled) {
         SpUtils.getInstance().putBoolean(DOUBLE_TAP_TO_LOCK, enabled);
+    }
+
+    /**
+     * Check if search bar gesture is enabled
+     */
+    public static boolean isSearchBarGestureEnabled() {
+        return SpUtils.getInstance().getBoolean(SEARCH_BAR_GESTURE, true);
+    }
+
+    /**
+     * Set search bar gesture preference
+     */
+    public static void setSearchBarGestureEnabled(boolean enabled) {
+        SpUtils.getInstance().putBoolean(SEARCH_BAR_GESTURE, enabled);
     }
 
     //  a simple ciphered counter: "opening counter" is a private thing

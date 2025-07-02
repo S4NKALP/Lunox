@@ -61,6 +61,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     private final Context context;
     private TextView freezeSize;
     private TextView doubleTapLockButton;
+    private TextView searchBarGestureButton;
 
     public GlobalSettingsDialog(Context context, LauncherActivity launcherActivity) {
         super(context);
@@ -110,6 +111,10 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         doubleTapLockButton = findViewById(R.id.settings_double_tap_lock);
         doubleTapLockButton.setOnClickListener(this);
 
+        // Search bar gesture toggle
+        searchBarGestureButton = findViewById(R.id.settings_search_bar_gesture);
+        searchBarGestureButton.setOnClickListener(this);
+        updateSearchBarGestureButtonText();
 
         //reflect the DB value
         if (DbUtils.isSizeFrozen()) {
@@ -158,6 +163,8 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
             launcherActivity.recreate();
         } else if (id == R.id.settings_double_tap_lock) {
             toggleDoubleTapToLock();
+        } else if (id == R.id.settings_search_bar_gesture) {
+            toggleSearchBarGesture();
         }
     }
 
@@ -399,6 +406,22 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
             return true;
         });
         popupMenu.show();
+    }
+
+    private void toggleSearchBarGesture() {
+        boolean enabled = DbUtils.isSearchBarGestureEnabled();
+        DbUtils.setSearchBarGestureEnabled(!enabled);
+        updateSearchBarGestureButtonText();
+    }
+
+    private void updateSearchBarGestureButtonText() {
+        if (DbUtils.isSearchBarGestureEnabled()) {
+            searchBarGestureButton.setText(R.string.search_bar_gesture);
+            searchBarGestureButton.setAlpha(1.0f);
+        } else {
+            searchBarGestureButton.setText(context.getString(R.string.search_bar_gesture) + " (Off)");
+            searchBarGestureButton.setAlpha(0.5f);
+        }
     }
 
 }

@@ -8,8 +8,11 @@
 - Added Swipe Up to Open Notifications Panel
 - Fixed Launcher Settings now work on all empty area
 - Added Double Tap to Lock Screen Feature
-
+- Added `Set as Default Launcher` option
+- Added Toggle button for search bar gesture
 
 * Project Shource codes Changes.
 
 - SDK targets 28-> 34 (android 13/14)
+- Instead of Static fields, Instance fields are used in LauncherActivity.java
+- Remove code duplication from LauncherActivity.java

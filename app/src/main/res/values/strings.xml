@@ -110,4 +110,6 @@
     <!-- Accessibility service description -->
     <string name="accessibility_service_description">Lunox Accessibility Service for lock screen functionality. This service allows double tap to lock the screen.</string>
     <string name="set_as_default_launcher">Set as default launcher</string>
+
+    <string name="search_bar_gesture">Enable Search Bar Gesture</string>
 </resources>

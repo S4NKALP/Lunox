@@ -1157,16 +1157,26 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
      @Override
     public void onSwipe(Gestures.Direction direction) {
         if (direction == Gestures.Direction.SWIPE_RIGHT) {
-            searching = true;
-            mSearchBox.setText("");
-            mSearchBox.setVisibility(View.VISIBLE);
-            mSearchBox.requestFocus();
-            imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
+            if (DbUtils.isSearchBarGestureEnabled() && !searching) {
+                searching = true;
+                mSearchBox.setText("");
+                mSearchBox.setVisibility(View.VISIBLE);
+                mSearchBox.requestFocus();
+                mSearchBox.animate().alpha(1.0f).setDuration(150).start();
+                imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
+                // Optionally, dim the background or add a visual cue
+            }
         } else if (direction == Gestures.Direction.SWIPE_LEFT) {
             if (searching) {
-                mSearchBox.setVisibility(View.GONE);
+                mSearchBox.animate().alpha(0.0f).setDuration(150).withEndAction(() -> {
+                    mSearchBox.setVisibility(View.GONE);
+                    mSearchBox.setAlpha(1.0f);
+                }).start();
                 imm.hideSoftInputFromWindow(mSearchBox.getWindowToken(), 0);
-                onResume();
+                // Reset app list to default state and padding
+                mHomeLayout.setPadding(DbUtils.getPaddingLeft(), DbUtils.getPaddingTop(), DbUtils.getPaddingRight(), DbUtils.getPaddingBottom());
+                sortApps(DbUtils.getSortsTypes());
+                searching = false;
             }
         }
     }
