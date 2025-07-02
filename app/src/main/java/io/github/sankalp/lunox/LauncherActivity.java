@@ -60,7 +60,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -162,6 +164,8 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     private Dialog dialogs;
     //search box
     private EditText mSearchBox;
+    private LinearLayout setDefaultLayout;
+    private Button setDefaultButton;
 
     private InputMethodManager imm;
     // gesture detector
@@ -294,9 +298,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
                 // Check if the touch is on an empty area (not on an app)
                 View touchedView = findViewAt(e.getX(), e.getY());
                 if (!(touchedView instanceof AppTextView)) {
-                    // Show launcher settings on long press in free space
-                    dialogs = new GlobalSettingsDialog(LauncherActivity.this, LauncherActivity.this);
-                    dialogs.show();
+                    showDialog(new GlobalSettingsDialog(LauncherActivity.this, LauncherActivity.this), true);
                 }
             }
         });
@@ -309,6 +311,10 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         loadApps();
         // register the receiver for installed, uninstall, update apps and shortcut pwa add
         registerForReceivers();
+
+        setDefaultLayout = findViewById(R.id.set_default_layout);
+        setDefaultButton = findViewById(R.id.set_default_button);
+        setDefaultButton.setOnClickListener(this);
 
     }
 
@@ -564,17 +570,26 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     // so launch the app
     @Override
     public void onClick(View view) {
-        if (view instanceof AppTextView) {
+        String activityName = null;
+        if (view.getTag() != null) {
+            activityName = view.getTag().toString();
+        }
 
+        if (view.equals(mSearchBox)) {
+            //do nothing
+            return;
+        } else if (view.equals(setDefaultButton)) {
+            Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+            startActivity(intent);
+        } else if (view instanceof AppTextView) {
             // get the activity
-            String activity = (String) view.getTag();
-            AppTextView appTextView = (AppTextView) view;
-
             if (searching) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mSearchBox.getWindowToken(), 0);
                 mSearchBox.setVisibility(View.GONE);
             }
+
+            AppTextView appTextView = (AppTextView) view;
 
             if (appTextView.isShortcut()) {
                 try {
@@ -582,13 +597,13 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    appOpened(activity);
+                    appOpened(activityName);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 //Notes to me:if view store package and component name then this could reduce this splits
-                String[] strings = activity.split("/");
+                String[] strings = activityName.split("/");
                 try {
                     final Intent intent = new Intent(Intent.ACTION_MAIN, null);
                     intent.setClassName(strings[0], strings[1]);
@@ -597,18 +612,19 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
                     startActivity(intent);
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     // tell the our db that app is opened
-                    appOpened(activity);
+                    appOpened(activityName);
                 } catch (Exception ignore) {
-                    //  Log.e(TAG, "onClick: exception:::" + ignore);
+                    //  Log.e(TAG, "onClick: exception::" + ignore);
                 }
             }
-
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        checkDefaultLauncher();
+
         // Check if we need to reload apps (e.g., after returning from settings)
         if (mAppsList != null && mAppsList.size() < 10) {
             // If we have very few apps, try reloading in case permissions were granted
@@ -720,16 +736,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
     // show the app rename Dialog
     public void renameApp(String activityName, String appName) {
-        dialogs = new RenameInputDialogs(this, activityName, appName, this);
-        Window window = dialogs.getWindow();
-        if (window != null) {
-            window.setGravity(Gravity.BOTTOM);
-            window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        }
-
-        dialogs.show();
-
+        showDialog(new RenameInputDialogs(this, activityName, appName, this), true);
     }
 
     // this is called by RenameInput.class Dialog when user set the name and sort the apps
@@ -782,17 +789,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
                 }
             }
         }
-        dialogs = new ColorSizeDialog(this, activityName, color, view, size);
-
-        Window window = dialogs.getWindow();
-        if (window != null) {
-            window.setGravity(Gravity.BOTTOM);
-            window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        }
-
-
-        dialogs.show();
+        showDialog(new ColorSizeDialog(this, activityName, color, view, size), true);
     }
 
     //TO1DO: multi thread check for memory leaks if any, or check any bad behaviour;
@@ -1121,32 +1118,12 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
     // show the hidden app dialog
     public void showHiddenApps() {
-        HiddenAppsDialogs dialogs = new HiddenAppsDialogs(this, mAppsList);
-        if (dialogs.updateHiddenList() != 0) {
-            dialogs.show();
-        } else {
-            //TODO: show no hidden apps
-            Toast tst = Toast.makeText(this, "No apps to show", Toast.LENGTH_SHORT);
-            TextView tv = (TextView) tst.getView().findViewById(android.R.id.message);
-            tv.setTextColor(Color.parseColor("#d5e0e2"));
-            tst.show();
-
-        }
+        showDialog(new HiddenAppsDialogs(this, mAppsList), false);
     }
 
     // show the frozen app dialog
     public void showFrozenApps() {
-        FrozenAppsDialogs dialogs = new FrozenAppsDialogs(this, mAppsList);
-        if (dialogs.updateFrozenList() != 0) {
-            dialogs.show();
-        } else {
-            //TODO: show no frozen apps
-            Toast tst = Toast.makeText(this, "No apps to show", Toast.LENGTH_SHORT);
-            TextView tv = (TextView) tst.getView().findViewById(android.R.id.message);
-            tv.setTextColor(Color.parseColor("#d5e0e2"));
-            tst.show();
-
-        }
+        showDialog(new FrozenAppsDialogs(this, mAppsList), false);
     }
 
     //set the flow layout alignment it is called from global settings
@@ -1156,24 +1133,11 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     public void setPadding() {
-        dialogs = new PaddingDialog(this, mHomeLayout);
-        // Window window = dialogs.getWindow();
-        // window.setGravity(Gravity.BOTTOM);
-        // window.setBackgroundDrawableResource(android.R.color.transparent);
-        // window.setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        dialogs.show();
+        showDialog(new PaddingDialog(this, mHomeLayout), false);
     }
 
     public void setColorsAndSize() {
-        dialogs = new GlobalColorSizeDialog(this, mAppsList);
-
-        Window window = dialogs.getWindow();
-        if (window != null) {
-            window.setGravity(Gravity.BOTTOM);
-            window.setBackgroundDrawableResource(android.R.color.transparent);
-            window.setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-        }
-        dialogs.show();
+        showDialog(new GlobalColorSizeDialog(this, mAppsList), true);
     }
 
     private void addShortcut(String uri, String appName) {
@@ -1235,9 +1199,17 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
     }
 
-
-
-
+    private void checkDefaultLauncher() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        final ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        String currentLauncherPackage = resolveInfo.activityInfo.packageName;
+        if (getPackageName().equals(currentLauncherPackage)) {
+            setDefaultLayout.setVisibility(View.GONE);
+        } else {
+            setDefaultLayout.setVisibility(View.VISIBLE);
+        }
+    }
 
     static class SearchTask extends AsyncTask<CharSequence, Void, ArrayList<Apps>> {
         @Override
@@ -1352,9 +1324,20 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
      * Show detailed double tap to lock dialog
      */
     private void showDoubleTapLockDialog() {
-        dialogs = new DoubleTapLockDialog(this, this);
-        dialogs.show();
+        showDialog(new DoubleTapLockDialog(this, this), true);
     }
 
+    private void showDialog(Dialog dialog, boolean setWindow) {
+        if (setWindow) {
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setGravity(Gravity.BOTTOM);
+                window.setBackgroundDrawableResource(android.R.color.transparent);
+                window.setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+            }
+        }
+        dialog.show();
+        this.dialogs = dialog;
+    }
 
 }
