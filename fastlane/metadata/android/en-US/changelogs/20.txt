@@ -9,6 +9,7 @@
 - Fixed Launcher Settings now work on all empty area
 - Added Double Tap to Lock Screen Feature
 - Added `Set as Default Launcher` option
+- Improve Search Bar Gesture
 - Added Toggle button for search bar gesture
 
 * Project Shource codes Changes.
