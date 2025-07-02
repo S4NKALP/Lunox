@@ -11,6 +11,7 @@
 - Added `Set as Default Launcher` option
 - Improve Search Bar Gesture
 - Added Toggle button for search bar gesture
+- Fixed Duplicate Dialogs on Long Press
 
 * Project Shource codes Changes.
 

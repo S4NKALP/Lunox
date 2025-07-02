@@ -195,6 +195,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
     };
     private SearchTask mSearchTask;
+    private Dialog globalSettingsDialog;
     //endregion
 
     private void showSearchResult(ArrayList<Apps> filteredApps) {
@@ -291,7 +292,11 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
                 // Check if the touch is on an empty area (not on an app)
                 View touchedView = findViewAt(e.getX(), e.getY());
                 if (!(touchedView instanceof AppTextView)) {
-                    showDialog(new GlobalSettingsDialog(LauncherActivity.this, LauncherActivity.this), true);
+                    if (globalSettingsDialog == null || !globalSettingsDialog.isShowing()) {
+                        globalSettingsDialog = new GlobalSettingsDialog(LauncherActivity.this, LauncherActivity.this);
+                        globalSettingsDialog.setOnDismissListener(d -> globalSettingsDialog = null);
+                        globalSettingsDialog.show();
+                    }
                 }
             }
         });
