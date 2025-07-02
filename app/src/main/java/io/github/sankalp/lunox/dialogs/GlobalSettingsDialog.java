@@ -226,7 +226,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         cancel();
         if (rColor) {
             int color;
-            for (Apps app : LauncherActivity.mAppsList) {
+            for (Apps app : launcherActivity.mAppsList) {
                 color = DbUtils.getAppColor(app.getActivityName());
                 if (color == DbUtils.NULL_TEXT_COLOR) {
                     color = Utils.generateColorFromString(app.getActivityName());

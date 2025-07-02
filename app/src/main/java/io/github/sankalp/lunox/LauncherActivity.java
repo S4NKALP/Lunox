@@ -148,13 +148,13 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
 
     //region Field declarations
-    public static ArrayList<Apps> mAppsList;
+    public ArrayList<Apps> mAppsList;
     // home layout
-    private static FlowLayout mHomeLayout;
+    private FlowLayout mHomeLayout;
     // when search bar is appear this will be true and show search result
-    private static boolean searching = false;
+    private boolean searching = false;
     //todo: save this to db
-    private static int recentlyUsedCounter = 0;
+    private int recentlyUsedCounter = 0;
     private final String TAG = "LauncherActivity";
     // broadcast receiver
     private BroadcastReceiver broadcastReceiverAppInstall;
@@ -175,7 +175,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     // For handling long press on empty areas
     private GestureDetector longPressDetector;
 
-    private static final TextWatcher mTextWatcher= new TextWatcher() {
+    private final TextWatcher mTextWatcher= new TextWatcher() {
 
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -194,24 +194,17 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             // do everything
         }
     };
-    private static  SearchTask mSearchTask;
+    private SearchTask mSearchTask;
     //endregion
 
-    private static void showSearchResult(ArrayList<Apps> filteredApps) {
+    private void showSearchResult(ArrayList<Apps> filteredApps) {
         if (!searching) return;
 
         mHomeLayout.removeAllViews();
         mHomeLayout.setPadding(0, 150, 0, 0);
-        /*//sort the apps alphabetically
-        Collections.sort(filteredApps, (a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
-                a.getAppName(),
-                b.getAppName()
-        ));*/
         for (Apps apps : filteredApps) {
             mHomeLayout.addView(apps.getTextView(), new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
-
-
     }
 
     @Override
@@ -1211,7 +1204,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    static class SearchTask extends AsyncTask<CharSequence, Void, ArrayList<Apps>> {
+    class SearchTask extends AsyncTask<CharSequence, Void, ArrayList<Apps>> {
         @Override
         protected void onPostExecute(ArrayList<Apps> filteredApps) {
             super.onPostExecute(filteredApps);
@@ -1232,7 +1225,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
     }
 
-    static class SortTask extends AsyncTask<Integer, Void, Void> {
+    class SortTask extends AsyncTask<Integer, Void, Void> {
 
         @Override
         protected void onPostExecute(Void aVoid) {
