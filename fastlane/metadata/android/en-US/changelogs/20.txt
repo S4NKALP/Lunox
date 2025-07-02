@@ -4,7 +4,6 @@
 
 - FOrked from the original Last Launcher
 - Rename App Name
-- New App Icon
 - Added Swipe Up to Open Notifications Panel
 - Fixed Launcher Settings now work on all empty area
 - Added Double Tap to Lock Screen Feature
