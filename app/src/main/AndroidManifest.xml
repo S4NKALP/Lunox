@@ -27,28 +27,13 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".LauncherActivity"
             android:configChanges="uiMode"
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleTask"
             android:taskAffinity=""
             android:windowSoftInputMode="stateAlwaysHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".helper.FakeHomeActivity"
-            android:enabled="false"
-            android:exported="false"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
