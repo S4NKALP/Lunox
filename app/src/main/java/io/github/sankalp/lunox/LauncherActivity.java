@@ -650,6 +650,8 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             dialogs = null;
         }
 
+        closeGlobalSettingsDialog();
+
         if (mSearchTask!=null) {
             mSearchTask.cancel(true);
             mSearchTask=null;
@@ -664,13 +666,18 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             showPopup((String) view.getTag(), (AppTextView) view);
         } else if (view instanceof FlowLayout) {
             // show launcher setting for FlowLayout (this handles long press on FlowLayout itself)
-            dialogs = new GlobalSettingsDialog(this, this);
-            dialogs.show();
+            if (globalSettingsDialog == null || !globalSettingsDialog.isShowing()) {
+                globalSettingsDialog = new GlobalSettingsDialog(this, this);
+                globalSettingsDialog.setOnDismissListener(d -> globalSettingsDialog = null);
+                globalSettingsDialog.show();
+            }
         }
         return true;
     }
 
     private void showPopup(String activityName, AppTextView view) {
+        // Close global settings dialog if it's open when showing app settings
+        closeGlobalSettingsDialog();
         // show app settings dialog instead of popup menu
         AppSettingsPopup popup = new AppSettingsPopup(this, activityName, view, this);
         popup.show();
@@ -925,6 +932,8 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             dialogs.dismiss();
             dialogs = null;
         }
+
+        closeGlobalSettingsDialog();
 
         if (mSearchTask!=null) {
             mSearchTask.cancel(true);
@@ -1339,6 +1348,9 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     }
 
     private void showDialog(Dialog dialog, boolean setWindow) {
+        // Close global settings dialog if it's open when showing other dialogs
+        closeGlobalSettingsDialog();
+
         if (setWindow) {
             Window window = dialog.getWindow();
             if (window != null) {
@@ -1349,6 +1361,16 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         }
         dialog.show();
         this.dialogs = dialog;
+    }
+
+    /**
+     * Close the global settings dialog if it's currently open
+     */
+    public void closeGlobalSettingsDialog() {
+        if (globalSettingsDialog != null && globalSettingsDialog.isShowing()) {
+            globalSettingsDialog.dismiss();
+            globalSettingsDialog = null;
+        }
     }
 
 }

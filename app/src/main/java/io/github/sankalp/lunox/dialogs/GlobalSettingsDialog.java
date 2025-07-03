@@ -157,8 +157,8 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         } else if (id == R.id.settings_alignment) {
             setFlowLayoutAlignment(view);
         } else if (id == R.id.settings_padding) {
+            launcherActivity.closeGlobalSettingsDialog();
             launcherActivity.setPadding();
-            cancel();
         } else if (id == R.id.settings_restart_launcher) {
             launcherActivity.recreate();
         } else if (id == R.id.settings_double_tap_lock) {
@@ -179,6 +179,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         popupMenu.getMenuInflater().inflate(R.menu.sort_apps_popups, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
+            launcherActivity.closeGlobalSettingsDialog();
             int id = menuItem.getItemId();
             if (id == R.id.menu_sort_by_name) {
                 launcherActivity.sortApps(Constants.SORT_BY_NAME);
@@ -199,8 +200,8 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void showColorAndSizeDialog() {
+        launcherActivity.closeGlobalSettingsDialog();
         launcherActivity.setColorsAndSize();
-        cancel();
     }
 
     private void setFlowLayoutAlignment(View view) {
@@ -214,6 +215,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         popupMenu.getMenuInflater().inflate(R.menu.alignment_popup, popupMenu.getMenu());
 
         popupMenu.setOnMenuItemClickListener(menuItem -> {
+            launcherActivity.closeGlobalSettingsDialog();
             int id = menuItem.getItemId();
             if (id == R.id.menu_center) {
                 launcherActivity.setFlowLayoutAlignment(Gravity.CENTER | Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
@@ -230,7 +232,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     private void randomColor() {
         boolean rColor = !DbUtils.isRandomColor();
         DbUtils.randomColor(rColor);
-        cancel();
+        launcherActivity.closeGlobalSettingsDialog();
         if (rColor) {
             int color;
             for (Apps app : launcherActivity.mAppsList) {
@@ -246,7 +248,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void showColorSnifferDialog() {
-        cancel();
+        launcherActivity.closeGlobalSettingsDialog();
         Intent intent = context.getPackageManager().getLaunchIntentForPackage("ryey.colorsniffer");
 
         // if color snifer app is not installed then send user to install it
@@ -273,22 +275,23 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void frozenApps() {
+        launcherActivity.closeGlobalSettingsDialog();
         launcherActivity.showFrozenApps();
-        cancel();
     }
 
     //show hidden apps
     private void hiddenApps() {
+        launcherActivity.closeGlobalSettingsDialog();
         launcherActivity.showHiddenApps();
-        cancel();
     }
 
     private void showThemeDialog() {
-        cancel();
+        launcherActivity.closeGlobalSettingsDialog();
         new ThemeSelectorDialog(getContext(), launcherActivity).show();
     }
 
     private void defaultSettings() {
+        launcherActivity.closeGlobalSettingsDialog();
         DbUtils.clearDB();
         launcherActivity.recreate();
     }
@@ -302,6 +305,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
             updateDoubleTapLockButtonText();
         } else {
             // If currently disabled, show the detailed dialog to explain and enable the feature
+            launcherActivity.closeGlobalSettingsDialog();
             DoubleTapLockDialog doubleTapDialog = new DoubleTapLockDialog(context, launcherActivity);
             doubleTapDialog.show();
 
@@ -336,7 +340,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void backup() {
-        cancel();
+        launcherActivity.closeGlobalSettingsDialog();
         Intent intentBackupFiles;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
             intentBackupFiles = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -359,7 +363,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void restore() {
-        cancel();
+        launcherActivity.closeGlobalSettingsDialog();
         Intent intentRestoreFiles;
         intentRestoreFiles = new Intent(Intent.ACTION_GET_CONTENT);
         intentRestoreFiles.addCategory(Intent.CATEGORY_OPENABLE);
@@ -369,7 +373,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
     }
 
     private void setFonts() {
-        cancel();
+        launcherActivity.closeGlobalSettingsDialog();
         Intent intentSetFonts = new Intent(Intent.ACTION_GET_CONTENT);
 
         intentSetFonts.addCategory(Intent.CATEGORY_OPENABLE);
@@ -397,10 +401,10 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
                 setFonts();
             } else if (id == R.id.menu_default_font) {
                 if (DbUtils.isFontExists()) {
+                    launcherActivity.closeGlobalSettingsDialog();
                     DbUtils.removeFont();
                     launcherActivity.setFont();
                     launcherActivity.loadApps();
-                    cancel();
                 }
             }
             return true;

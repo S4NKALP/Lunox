@@ -6,9 +6,9 @@
     <solid android:color="@android:color/black" />
     
     <!-- Border/stroke around the popup -->
-    <stroke
+    <!-- <stroke
         android:width="1dp"
-        android:color="#DEDEDE" />
+        android:color="#DEDEDE" /> -->
     
     <!-- Rounded corners for better appearance -->
     <corners android:radius="4dp" />
