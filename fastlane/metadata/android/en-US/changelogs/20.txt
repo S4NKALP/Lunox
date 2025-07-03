@@ -1,19 +1,20 @@
-*Beta release 9*
+*Beta release 10*
 
 * What's New in this release
 
-- FOrked from the original Last Launcher
-- Rename App Name
-- Added Swipe Up to Open Notifications Panel
-- Fixed Launcher Settings now work on all empty area
-- Added Double Tap to Lock Screen Feature
-- Added `Set as Default Launcher` option
-- Improve Search Bar Gesture
-- Added Toggle button for search bar gesture
-- Fixed Duplicate Dialogs on Long Press
+- Major APK size optimization (Target: Under 200KB from 437KB)
+- Removed unused lunox.png asset (270KB saved)
+- Replaced custom TTF font with system font (87KB saved)
+- Enabled ProGuard/R8 code minification and shrinking
+- Limited language translations to essential ones (en, de, es, fr, it)
+- Enhanced resource compression and optimization
+- Faster installation and reduced storage footprint
 
-* Project Shource codes Changes.
+* Project Source codes Changes.
 
-- SDK targets 28-> 34 (android 13/14)
-- Instead of Static fields, Instance fields are used in LauncherActivity.java
-- Remove code duplication from LauncherActivity.java
+- Enabled R8 full mode for maximum code optimization
+- Enhanced ProGuard rules with aggressive 5-pass optimization
+- Optimized packaging to exclude unnecessary metadata
+- Improved build configuration for minimal APK size
+- Removed debug logging in release builds
+- Enhanced build cache and resource optimizations

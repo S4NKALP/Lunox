@@ -6,7 +6,7 @@
   <a href="https://www.youtube.com/watch?v=SzhJgH4a2cU"><img src="https://img.shields.io/badge/demo-YouTube-red?logo=youtube" alt="YouTube Demo"></a>
 </p>
 
-> **Note:** This is a maintained fork of the original [lastlauncher](https://github.com/SubhamTyagi/Last-Launcher.git) project by [Subham Tyagi](https://github.com/SubhamTyagi). All original contributions are credited to the author. This fork may include additional features, fixes, and updates.
+> **Note:** This is a maintained fork of the original [lastlauncher](https://github.com/SubhamTyagi/Last-Launcher.git) project by [Subham Tyagi](https://github.com/SubhamTyagi). All original contributions are credited to the author. This fork may include additional features, fixes, and updates. The version numbering will continue from where Last Launcher left off to maintain continuity.
 
 ---
 

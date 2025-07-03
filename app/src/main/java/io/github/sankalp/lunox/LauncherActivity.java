@@ -357,12 +357,14 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         // get and set fonts
         String fontsPath = DbUtils.getFonts();
         if (fontsPath == null) {
-            mTypeface = Typeface.createFromAsset(getAssets(), "fonts/raleway_bold.ttf");
+            // Use system font instead of custom TTF to reduce APK size
+            mTypeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
         } else {
             try {
                 mTypeface = Typeface.createFromFile(fontsPath);
             } catch (Exception i) {
-                mTypeface = Typeface.createFromAsset(getAssets(), "fonts/raleway_bold.ttf");
+                // Fallback to system font instead of custom TTF
+                mTypeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
             }
         }
 
@@ -997,7 +999,8 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
                     loadApps();
                 } catch (Exception i) {
                     //i.printStackTrace();
-                    mTypeface = Typeface.createFromAsset(getAssets(), "fonts/raleway_bold.ttf");
+                    // Fallback to system font instead of custom TTF
+                    mTypeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
                 }
                 break;
 
@@ -1163,18 +1166,18 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     public void onSwipe(Gestures.Direction direction) {
         if (direction == Gestures.Direction.SWIPE_RIGHT) {
             if (DbUtils.isSearchBarGestureEnabled() && !searching) {
-                searching = true;
-                mSearchBox.setText("");
-                mSearchBox.setVisibility(View.VISIBLE);
-                mSearchBox.requestFocus();
+            searching = true;
+            mSearchBox.setText("");
+            mSearchBox.setVisibility(View.VISIBLE);
+            mSearchBox.requestFocus();
                 mSearchBox.animate().alpha(1.0f).setDuration(150).start();
-                imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(mSearchBox, InputMethodManager.SHOW_IMPLICIT);
                 // Optionally, dim the background or add a visual cue
             }
         } else if (direction == Gestures.Direction.SWIPE_LEFT) {
             if (searching) {
                 mSearchBox.animate().alpha(0.0f).setDuration(150).withEndAction(() -> {
-                    mSearchBox.setVisibility(View.GONE);
+                mSearchBox.setVisibility(View.GONE);
                     mSearchBox.setAlpha(1.0f);
                 }).start();
                 imm.hideSoftInputFromWindow(mSearchBox.getWindowToken(), 0);

@@ -16,9 +16,30 @@
 #   public *;
 #}
 
--optimizationpasses 3
+# Aggressive optimization for minimal APK size
+-optimizationpasses 5
 -dontpreverify
--repackageclasses
+-repackageclasses ''
 -allowaccessmodification
 -mergeinterfacesaggressively
--optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*,method/inlining/short,class/merging/horizontal,class/merging/vertical
+-overloadaggressively
+
+# Enable all safe optimizations
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+
+# Remove unused code aggressively
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** i(...);
+    public static *** w(...);
+    public static *** e(...);
+}
+
+# Keep only essential classes
+-keep class io.github.sankalp.lunox.LauncherActivity { *; }
+-keep class io.github.sankalp.lunox.** { *; }
+
+# Remove debug information
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
