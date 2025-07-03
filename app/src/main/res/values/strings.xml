@@ -116,26 +116,26 @@
     <string name="onboarding_close">Close</string>
 
     <!-- Tutorial Steps -->
-    <string name="tutorial_step_1_title">Welcome to Lunox Launcher</string>
-    <string name="tutorial_step_1_content">Lunox is a minimalist text-based launcher that puts simplicity first. All your apps are displayed as text in a clean, distraction-free interface.</string>
+    <string name="tutorial_step_1_title">Welcome to Lunox</string>
+    <string name="tutorial_step_1_content">A minimalist text-based launcher. Apps are displayed as text in a clean interface.</string>
 
     <string name="tutorial_step_2_title">Opening Apps</string>
-    <string name="tutorial_step_2_content">Simply tap on any app name to open it. Apps are sorted alphabetically by default, but you can change the sorting in settings.</string>
+    <string name="tutorial_step_2_content">Tap any app name to open it. Apps are sorted alphabetically by default.</string>
 
-    <string name="tutorial_step_3_title">Search Functionality</string>
-    <string name="tutorial_step_3_content">Swipe down to up anywhere on the screen to open the search bar. Start typing to quickly find and launch any app.</string>
+    <string name="tutorial_step_3_title">Search</string>
+    <string name="tutorial_step_3_content">Swipe down to up to open search. Start typing to find apps quickly.</string>
 
     <string name="tutorial_step_4_title">App Options</string>
-    <string name="tutorial_step_4_content">Long press on any app to access options like rename, hide, uninstall, change colors, and more customization features.</string>
+    <string name="tutorial_step_4_content">Long press any app for options: rename, hide, colors, and more.</string>
 
-    <string name="tutorial_step_5_title">Launcher Settings</string>
-    <string name="tutorial_step_5_content">Long press on empty space to access launcher settings. Here you can change themes, fonts, sorting options, and other preferences.</string>
+    <string name="tutorial_step_5_title">Settings</string>
+    <string name="tutorial_step_5_content">Long press empty space for launcher settings: themes, fonts, sorting.</string>
 
     <string name="tutorial_step_6_title">Customization</string>
-    <string name="tutorial_step_6_content">Personalize your launcher with different themes, custom colors for apps, font options, and various sorting methods to make it truly yours.</string>
+    <string name="tutorial_step_6_content">Personalize with themes, colors, fonts, and sorting methods.</string>
 
-    <string name="tutorial_step_7_title">You\'re All Set!</string>
-    <string name="tutorial_step_7_content">That\'s all you need to know to get started with Lunox. Enjoy your clean, minimalist launcher experience!</string>
+    <string name="tutorial_step_7_title">Ready!</string>
+    <string name="tutorial_step_7_content">You\'re all set. Enjoy your minimalist launcher!</string>
 
     <string name="tutorial_replay">Show Tutorial</string>
 

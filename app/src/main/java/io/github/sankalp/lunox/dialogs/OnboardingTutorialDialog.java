@@ -28,35 +28,27 @@ public class OnboardingTutorialDialog extends Dialog implements View.OnClickList
 
     private final LauncherActivity launcherActivity;
     private final Context context;
-    
+
     private TextView titleView;
     private TextView stepIndicatorView;
     private TextView contentView;
     private TextView skipButton;
     private TextView previousButton;
     private TextView nextButton;
-    
+
     private int currentStep = 1;
     private static final int TOTAL_STEPS = 7;
-    
-    // Tutorial step data
-    private final int[] stepTitles = {
-        R.string.tutorial_step_1_title,
-        R.string.tutorial_step_2_title,
-        R.string.tutorial_step_3_title,
-        R.string.tutorial_step_4_title,
-        R.string.tutorial_step_5_title,
-        R.string.tutorial_step_6_title,
+
+    // Tutorial step data - using static arrays to reduce memory footprint
+    private static final int[] STEP_TITLES = {
+        R.string.tutorial_step_1_title, R.string.tutorial_step_2_title, R.string.tutorial_step_3_title,
+        R.string.tutorial_step_4_title, R.string.tutorial_step_5_title, R.string.tutorial_step_6_title,
         R.string.tutorial_step_7_title
     };
-    
-    private final int[] stepContents = {
-        R.string.tutorial_step_1_content,
-        R.string.tutorial_step_2_content,
-        R.string.tutorial_step_3_content,
-        R.string.tutorial_step_4_content,
-        R.string.tutorial_step_5_content,
-        R.string.tutorial_step_6_content,
+
+    private static final int[] STEP_CONTENTS = {
+        R.string.tutorial_step_1_content, R.string.tutorial_step_2_content, R.string.tutorial_step_3_content,
+        R.string.tutorial_step_4_content, R.string.tutorial_step_5_content, R.string.tutorial_step_6_content,
         R.string.tutorial_step_7_content
     };
 
@@ -92,7 +84,7 @@ public class OnboardingTutorialDialog extends Dialog implements View.OnClickList
 
         // Update content for first step
         updateStepContent();
-        
+
         // Prevent dismissing by tapping outside
         setCancelable(false);
     }
@@ -120,21 +112,21 @@ public class OnboardingTutorialDialog extends Dialog implements View.OnClickList
 
     private void updateStepContent() {
         // Update title
-        titleView.setText(stepTitles[currentStep - 1]);
-        
+        titleView.setText(STEP_TITLES[currentStep - 1]);
+
         // Update step indicator
-        stepIndicatorView.setText(currentStep + " / " + TOTAL_STEPS);
-        
+        stepIndicatorView.setText(currentStep + "/" + TOTAL_STEPS);
+
         // Update content
-        contentView.setText(stepContents[currentStep - 1]);
-        
+        contentView.setText(STEP_CONTENTS[currentStep - 1]);
+
         // Update button visibility and text
         if (currentStep == 1) {
             previousButton.setVisibility(View.GONE);
         } else {
             previousButton.setVisibility(View.VISIBLE);
         }
-        
+
         if (currentStep == TOTAL_STEPS) {
             nextButton.setText(R.string.onboarding_finish);
             skipButton.setVisibility(View.GONE);
@@ -148,7 +140,7 @@ public class OnboardingTutorialDialog extends Dialog implements View.OnClickList
         // Mark tutorial as completed
         DbUtils.setTutorialCompleted(true);
         DbUtils.setFirstTimeUser(false);
-        
+
         // Dismiss dialog
         dismiss();
     }
