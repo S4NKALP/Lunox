@@ -91,6 +91,7 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         findViewById(R.id.settings_padding).setOnClickListener(this);
         findViewById(R.id.settings_color_size).setOnClickListener(this);
         findViewById(R.id.settings_sort_app_by).setOnClickListener(this);
+        findViewById(R.id.settings_tutorial).setOnClickListener(this);
         findViewById(R.id.settings_restart_launcher).setOnClickListener(this);
 
         //TODO: remove this var
@@ -159,6 +160,8 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
         } else if (id == R.id.settings_padding) {
             launcherActivity.closeGlobalSettingsDialog();
             launcherActivity.setPadding();
+        } else if (id == R.id.settings_tutorial) {
+            showTutorial();
         } else if (id == R.id.settings_restart_launcher) {
             launcherActivity.recreate();
         } else if (id == R.id.settings_double_tap_lock) {
@@ -426,6 +429,11 @@ public class GlobalSettingsDialog extends Dialog implements View.OnClickListener
             searchBarGestureButton.setText(context.getString(R.string.search_bar_gesture) + " (Off)");
             searchBarGestureButton.setAlpha(0.5f);
         }
+    }
+
+    private void showTutorial() {
+        launcherActivity.closeGlobalSettingsDialog();
+        launcherActivity.showOnboardingTutorial();
     }
 
 }

@@ -89,6 +89,7 @@ import io.github.sankalp.lunox.dialogs.FrozenAppsDialogs;
 import io.github.sankalp.lunox.dialogs.GlobalColorSizeDialog;
 import io.github.sankalp.lunox.dialogs.GlobalSettingsDialog;
 import io.github.sankalp.lunox.dialogs.HiddenAppsDialogs;
+import io.github.sankalp.lunox.dialogs.OnboardingTutorialDialog;
 import io.github.sankalp.lunox.dialogs.PaddingDialog;
 import io.github.sankalp.lunox.dialogs.RenameInputDialogs;
 import io.github.sankalp.lunox.model.Apps;
@@ -313,6 +314,9 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         setDefaultLayout = findViewById(R.id.set_default_layout);
         setDefaultButton = findViewById(R.id.set_default_button);
         setDefaultButton.setOnClickListener(this);
+
+        // Show onboarding tutorial for first-time users
+        showOnboardingTutorialIfNeeded();
 
     }
 
@@ -1343,6 +1347,21 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     /**
      * Show detailed double tap to lock dialog
      */
+    private void showOnboardingTutorialIfNeeded() {
+        if (DbUtils.isFirstTimeUser() && !DbUtils.isTutorialCompleted()) {
+            // Use a post to ensure the UI is fully loaded before showing the dialog
+            mHomeLayout.post(() -> {
+                OnboardingTutorialDialog tutorialDialog = new OnboardingTutorialDialog(this, this);
+                tutorialDialog.show();
+            });
+        }
+    }
+
+    public void showOnboardingTutorial() {
+        OnboardingTutorialDialog tutorialDialog = new OnboardingTutorialDialog(this, this);
+        tutorialDialog.show();
+    }
+
     private void showDoubleTapLockDialog() {
         showDialog(new DoubleTapLockDialog(this, this), true);
     }

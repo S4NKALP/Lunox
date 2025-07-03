@@ -63,6 +63,8 @@ public class DbUtils {
     private static final String APPS_SORTS_TYPE = "apps_sorts_types";
     private static final String DOUBLE_TAP_TO_LOCK = "double_tap_to_lock";
     private static final String SEARCH_BAR_GESTURE = "search_bar_gesture";
+    private static final String FIRST_TIME_USER = "first_time_user";
+    private static final String TUTORIAL_COMPLETED = "tutorial_completed";
 
 
     public static void init(Context context) {
@@ -393,6 +395,22 @@ public class DbUtils {
      */
     public static void setDoubleTapToLock(boolean enabled) {
         SpUtils.getInstance().putBoolean(DOUBLE_TAP_TO_LOCK, enabled);
+    }
+
+    public static boolean isFirstTimeUser() {
+        return SpUtils.getInstance().getBoolean(FIRST_TIME_USER, true);
+    }
+
+    public static void setFirstTimeUser(boolean isFirstTime) {
+        SpUtils.getInstance().putBoolean(FIRST_TIME_USER, isFirstTime);
+    }
+
+    public static boolean isTutorialCompleted() {
+        return SpUtils.getInstance().getBoolean(TUTORIAL_COMPLETED, false);
+    }
+
+    public static void setTutorialCompleted(boolean completed) {
+        SpUtils.getInstance().putBoolean(TUTORIAL_COMPLETED, completed);
     }
 
     /**

@@ -14,6 +14,8 @@
 - Fixed Duplicate Dialogs on Long Press
 - Enhanced gesture detection for better responsiveness
 - Fixed WhiteOnGrey and BlackOnGrey themes using distinct colors for better visibility
+- Added Onboarding Tutorial for new users with step-by-step walkthrough
+- Tutorial can be replayed from launcher settings
 
 * Technical Improvements
 
@@ -23,6 +25,8 @@
 - Improved dialog management to prevent duplicate dialogs
 - Better empty area detection for long press functionality
 - Enhanced search functionality with smooth animations
+- Added comprehensive onboarding system with multi-step tutorial dialog
+- Implemented first-time user detection and tutorial completion tracking
 
 * Project Source Code Changes
 
