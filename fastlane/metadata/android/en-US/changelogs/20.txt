@@ -29,5 +29,4 @@
 - Instead of Static fields, Instance fields are used in LauncherActivity.java
 - Remove code duplication from LauncherActivity.java
 - Refactored package structure from Last Launcher to Lunox
-- Updated all copyright headers and licensing information
 - Improved code organization and documentation
