@@ -17,7 +17,7 @@
 - [Screenshots](#screenshots)
 - [To Do](#to-do)
 - [Contributing](#contributing)
-- [Third-party Libraries and Fonts](#third-party-libraries-and-fonts)
+- [Third-party Libraries](#third-party-libraries)
 - [Credits](#credits)
 - [License](#license)
 
@@ -85,14 +85,12 @@ Contributions, bug reports, and translations are welcome!
 
 ---
 
-## 📚 Third-party Libraries and Fonts
+## 📚 Third-party Libraries
 
 ### Android Libraries
 - [android-flowlayout](https://github.com/ApmeM/android-flowlayout) by [Artem.Votincev](https://github.com/ApmeM) ([Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0))
 - [ColorSeekBar](https://github.com/rtugeek/ColorSeekBar) by [Jack Fu](https://github.com/rtugeek) ([WTFPL](http://www.wtfpl.net/))
 
-### Fonts
-- [Raleway fonts](https://github.com/impallari/Raleway/) by [Pablo Impallari](https://github.com/impallari) ([SIL Open Font License, Version 1.1](http://scripts.sil.org/OFL))
 
 ---
 
