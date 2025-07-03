@@ -1,19 +1,33 @@
-*Beta release 10*
+
+*Beta release 9*
 
 * What's New in this release
 
-- Major APK size optimization (Target: Under 200KB from 437KB)
-- Removed unused lunox.png asset (270KB saved)
-- Replaced custom TTF font with system font (87KB saved)
-- Enabled ProGuard/R8 code minification and shrinking
-- Enhanced resource compression and optimization
-- Faster installation and reduced storage footprint
+- Forked from the original Last Launcher
+- Renamed App Name to "Lunox"
+- New App Icon
+- Fixed Launcher Settings now work on all empty areas (long press)
+- Added Double Tap to Lock Screen Feature (requires accessibility service)
+- Added `Set as Default Launcher` button (appears when not default)
+- Improved Search Bar Gesture (swipe right to open, left to close)
+- Added Toggle button for search bar gesture in settings
+- Fixed Duplicate Dialogs on Long Press
+- Enhanced gesture detection for better responsiveness
 
-* Project Source codes Changes.
+* Technical Improvements
 
-- Enabled R8 full mode for maximum code optimization
-- Enhanced ProGuard rules with aggressive 5-pass optimization
-- Optimized packaging to exclude unnecessary metadata
-- Improved build configuration for minimal APK size
-- Removed debug logging in release builds
-- Enhanced build cache and resource optimizations
+- Implemented NotificationPanelManager utility class (foundation for future features)
+- Enhanced gesture detection system with double tap support
+- Added accessibility service integration for screen lock functionality
+- Improved dialog management to prevent duplicate dialogs
+- Better empty area detection for long press functionality
+- Enhanced search functionality with smooth animations
+
+* Project Source Code Changes
+
+- SDK targets 28-> 34 (Android 13/14)
+- Instead of Static fields, Instance fields are used in LauncherActivity.java
+- Remove code duplication from LauncherActivity.java
+- Refactored package structure from Last Launcher to Lunox
+- Updated all copyright headers and licensing information
+- Improved code organization and documentation
