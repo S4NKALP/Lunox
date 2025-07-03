@@ -13,6 +13,7 @@
 - Added Toggle button for search bar gesture in settings
 - Fixed Duplicate Dialogs on Long Press
 - Enhanced gesture detection for better responsiveness
+- Fixed WhiteOnGrey and BlackOnGrey themes using distinct colors for better visibility
 
 * Technical Improvements
 

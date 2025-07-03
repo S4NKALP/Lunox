@@ -79,21 +79,21 @@
 
     <style name="WhiteOnGrey" parent="AppBaseTheme">
 
-        <item name="android:background">#cdd8da</item>
+        <item name="android:background">#424242</item>
         <item name="android:shadowColor">@android:color/white</item>
         <item name="android:textColor">#FFFFFFFF</item>
         <!-- <item name="android:switchTextAppearance">#FFFFFFFF</item>-->
-        <item name="android:statusBarColor" tools:targetApi="lollipop">#cdd8da</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">#cdd8da</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">#424242</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">#424242</item>
 
     </style>
 
     <style name="BlackOnGrey" parent="AppBaseTheme">
-        <item name="android:background">#d5e0e2</item>
+        <item name="android:background">#E0E0E0</item>
         <item name="android:textColor">#FF000000</item>
         <!--<item name="android:switchTextAppearance">#FF000000</item>-->
-        <item name="android:statusBarColor" tools:targetApi="lollipop">#d5e0e2</item>
-        <item name="android:navigationBarColor" tools:targetApi="21">#d5e0e2</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">#E0E0E0</item>
+        <item name="android:navigationBarColor" tools:targetApi="21">#E0E0E0</item>
 
     </style>
 
