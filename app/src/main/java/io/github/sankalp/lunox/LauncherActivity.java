@@ -204,8 +204,20 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
         mHomeLayout.removeAllViews();
         mHomeLayout.setPadding(0, 150, 0, 0);
+
+        // Performance improvement: Use batch operations for search results
+        List<View> searchViews = new ArrayList<>();
         for (Apps apps : filteredApps) {
-            mHomeLayout.addView(apps.getTextView(), new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            searchViews.add(apps.getTextView());
+        }
+
+        if (mHomeLayout instanceof FlowLayout) {
+            ((FlowLayout) mHomeLayout).addViewsBatch(searchViews);
+        } else {
+            // Fallback to individual additions
+            for (View view : searchViews) {
+                mHomeLayout.addView(view, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            }
         }
     }
 
@@ -951,11 +963,25 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
             imm=null;
         }
 
+        // Performance improvement: Clear recycled views to free memory
+        if (mHomeLayout instanceof FlowLayout) {
+            ((FlowLayout) mHomeLayout).clearRecycledViews();
+        }
+
         unregisterReceiver(broadcastReceiverAppInstall);
         unregisterReceiver(broadcastReceiverShortcutInstall);
         broadcastReceiverAppInstall = null;
         broadcastReceiverShortcutInstall = null;
         shortcutUtils.close();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        // Performance improvement: Clear recycled views on low memory
+        if (mHomeLayout instanceof FlowLayout) {
+            ((FlowLayout) mHomeLayout).clearRecycledViews();
+        }
     }
 
     @Override
@@ -1262,21 +1288,30 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
+            // Performance improvement: Use batch operations for better performance
             mHomeLayout.removeAllViews();
             mHomeLayout.removeAllViewsInLayout();
-            // now add the app textView to home
-            // FlowLayoutManager.LayoutParams params = new FlowLayoutManager.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-            // params.setNewLine(true);
+
+            // Prepare views for batch addition
+            List<View> viewsToAdd = new ArrayList<>();
 
             for (Apps app : mAppsList) {
-                AppTextView textView=app.getTextView();
-                if (textView.getParent()!=null){
-                    ( (ViewGroup)textView.getParent()).removeView(textView);
+                AppTextView textView = app.getTextView();
+                if (textView.getParent() != null) {
+                    ((ViewGroup) textView.getParent()).removeView(textView);
                 }
-                mHomeLayout.addView(textView, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                viewsToAdd.add(textView);
             }
 
-
+            // Use batch add for better performance
+            if (mHomeLayout instanceof FlowLayout) {
+                ((FlowLayout) mHomeLayout).addViewsBatch(viewsToAdd);
+            } else {
+                // Fallback to individual additions
+                for (View view : viewsToAdd) {
+                    mHomeLayout.addView(view, new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                }
+            }
         }
 
         @Override

@@ -68,7 +68,7 @@ Lunox is a fast, simple, minimal, and highly customizable single-page Android la
 ---
 
 ## 📝 To Do
-- [ ] FlowLayout improvements
+- [x] FlowLayout improvements
 - [ ] Background colors
 
 ---

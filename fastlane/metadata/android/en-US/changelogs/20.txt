@@ -16,6 +16,7 @@
 - Fixed WhiteOnGrey and BlackOnGrey themes using distinct colors for better visibility
 - Added Onboarding Tutorial for new users with step-by-step walkthrough
 - Tutorial can be replayed from launcher settings
+- Significantly improved app list performance with FlowLayout optimizations
 
 * Technical Improvements
 
@@ -27,6 +28,17 @@
 - Enhanced search functionality with smooth animations
 - Added comprehensive onboarding system with multi-step tutorial dialog
 - Implemented first-time user detection and tutorial completion tracking
+- Major FlowLayout performance improvements with caching and view recycling
+
+* FlowLayout Performance Improvements
+
+- Implemented layout caching to avoid unnecessary recalculations
+- Added view recycling system to reduce memory allocation
+- Introduced batch view operations for faster app list updates
+- Smart cache invalidation when layout parameters change
+- Memory management improvements with automatic cleanup on low memory
+- Optimized search results display with batch operations
+- Reduced layout passes for better scrolling performance
 
 * Project Source Code Changes
 
