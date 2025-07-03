@@ -6,7 +6,6 @@
 - Removed unused lunox.png asset (270KB saved)
 - Replaced custom TTF font with system font (87KB saved)
 - Enabled ProGuard/R8 code minification and shrinking
-- Limited language translations to essential ones (en, de, es, fr, it)
 - Enhanced resource compression and optimization
 - Faster installation and reduced storage footprint
 
