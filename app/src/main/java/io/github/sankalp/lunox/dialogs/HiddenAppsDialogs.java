@@ -59,6 +59,15 @@ public class HiddenAppsDialogs extends Dialog {
         listView.setAdapter(adapter);
         adapter.setOnClickListener(this::confirmationAndRemove);
 
+        // Show or hide the empty label based on list content
+        android.widget.TextView emptyLabel = findViewById(R.id.empty_label);
+        if (hiddenApps.isEmpty()) {
+            emptyLabel.setVisibility(android.view.View.VISIBLE);
+            emptyLabel.setText("No apps are hidden");
+        } else {
+            emptyLabel.setVisibility(android.view.View.GONE);
+        }
+
     }
 
 

@@ -50,5 +50,15 @@
             android:text="@string/set_as_default_launcher" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/bottom_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"
+        android:padding="12dp"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp" />
+
 </LinearLayout>
 

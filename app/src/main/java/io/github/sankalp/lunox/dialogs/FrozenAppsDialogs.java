@@ -59,6 +59,15 @@ public class FrozenAppsDialogs extends Dialog {
 
         adapter.setOnClickListener(this::confirmationAndRemove);
 
+        // Show or hide the empty label based on list content
+        android.widget.TextView emptyLabel = findViewById(R.id.empty_label);
+        if (frozenApps.isEmpty()) {
+            emptyLabel.setVisibility(android.view.View.VISIBLE);
+            emptyLabel.setText("No apps are frozen");
+        } else {
+            emptyLabel.setVisibility(android.view.View.GONE);
+        }
+
     }
 
     private void confirmationAndRemove(Apps apps, View view) {

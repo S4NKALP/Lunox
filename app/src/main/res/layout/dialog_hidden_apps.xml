@@ -32,4 +32,14 @@
         android:layout_margin="6dp"
         android:foregroundGravity="center_vertical|center|center_horizontal" />
 
+    <TextView
+        android:id="@+id/empty_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No apps are hidden"
+        android:gravity="center"
+        android:visibility="gone"
+        android:padding="16dp"
+        android:textColor="@android:color/darker_gray" />
+
 </LinearLayout>

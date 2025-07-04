@@ -197,6 +197,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
     };
     private SearchTask mSearchTask;
     private Dialog globalSettingsDialog;
+    private TextView bottomLabel;
     //endregion
 
     private void showSearchResult(ArrayList<Apps> filteredApps) {
@@ -330,6 +331,7 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
         // Show onboarding tutorial for first-time users
         showOnboardingTutorialIfNeeded();
 
+        bottomLabel = findViewById(R.id.bottom_label);
     }
 
     private void setSearchBoxListeners() {
@@ -1158,12 +1160,46 @@ public class LauncherActivity extends Activity implements View.OnClickListener,
 
     // show the hidden app dialog
     public void showHiddenApps() {
-        showDialog(new HiddenAppsDialogs(this, mAppsList), false);
+        // Check for hidden apps
+        boolean hasHidden = false;
+        for (Apps app : mAppsList) {
+            if (app.isHidden()) {
+                hasHidden = true;
+                break;
+            }
+        }
+        if (hasHidden) {
+            showDialog(new HiddenAppsDialogs(this, mAppsList), false);
+            if (bottomLabel != null) bottomLabel.setVisibility(View.GONE);
+        } else {
+            if (bottomLabel != null) {
+                bottomLabel.setText("No apps are hidden");
+                bottomLabel.setVisibility(View.VISIBLE);
+                bottomLabel.postDelayed(() -> bottomLabel.setVisibility(View.GONE), 3000);
+            }
+        }
     }
 
     // show the frozen app dialog
     public void showFrozenApps() {
-        showDialog(new FrozenAppsDialogs(this, mAppsList), false);
+        // Check for frozen apps
+        boolean hasFrozen = false;
+        for (Apps app : mAppsList) {
+            if (app.isSizeFrozen()) {
+                hasFrozen = true;
+                break;
+            }
+        }
+        if (hasFrozen) {
+            showDialog(new FrozenAppsDialogs(this, mAppsList), false);
+            if (bottomLabel != null) bottomLabel.setVisibility(View.GONE);
+        } else {
+            if (bottomLabel != null) {
+                bottomLabel.setText("No apps are frozen");
+                bottomLabel.setVisibility(View.VISIBLE);
+                bottomLabel.postDelayed(() -> bottomLabel.setVisibility(View.GONE), 3000);
+            }
+        }
     }
 
     //set the flow layout alignment it is called from global settings
